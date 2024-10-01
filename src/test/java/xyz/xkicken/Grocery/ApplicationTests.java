@@ -1,4 +1,4 @@
-package com.example.Grocery;
+package xyz.xkicken.Grocery;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
