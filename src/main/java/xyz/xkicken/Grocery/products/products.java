@@ -6,22 +6,22 @@ import org.springframework.data.annotation.Version;
 
 public record products(
         @Id
-        Integer product_id,
+        Integer productId,
         @NotEmpty
-        String product_name,
-        Integer category_id,
+        String productName,
+        Integer categoryId,
         Double price,
-        Integer stock_quantity,
-        Integer min_stock_quantity,
-        Double cost_price,
-        Double reorder_level,
-        String unit_of_measure,
-        String shelf_location,
-        String plu_code,
+        Integer stockQuantity,
+        Integer minStockQuantity,
+        Double costPrice,
+        Double reorderLevel,
+        String unitOfMeasure,
+        String shelfLocation,
+        String pluCode,
         String barcode,
-        String expiration_date,
-        Boolean is_active,
-        String date_added,
+        String expirationDate,
+        Boolean isActive,
+        String dateAdded,
         @Version
         Integer version
 ) {
