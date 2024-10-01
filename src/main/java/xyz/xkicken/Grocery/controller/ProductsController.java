@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/products/api")
+@RequestMapping("/api/products")
 public class ProductsController {
 
    private final productsRepository productsRepository;
@@ -29,6 +29,11 @@ public class ProductsController {
     @GetMapping({"/{id}"})
     public Optional<products> findById(@PathVariable Integer id) {
         return productsRepository.findById(id);
+    }
+
+    @GetMapping({"/category/{id}"})
+    public List<products> findItemByCategory(@PathVariable Integer id) {
+        return productsRepository.findBycategoryId(id);
     }
 
 }

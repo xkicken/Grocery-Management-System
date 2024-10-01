@@ -29,4 +29,11 @@ public class jdbcProductsRepository {
                 .optional();
     }
 
+    public List<products> findBycategoryId(int id) {
+        return jdbcClient.sql("select * from products where category_id = ?")
+                .param(id)
+                .query(products.class)
+                .list();
+    }
+
 }
