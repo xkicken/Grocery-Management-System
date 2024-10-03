@@ -1,11 +1,11 @@
 package xyz.xkicken.Grocery.controller;
 
 import org.springframework.web.bind.annotation.PathVariable;
-import xyz.xkicken.Grocery.products.productsRepository;
+import xyz.xkicken.Grocery.repository.productsRepository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import xyz.xkicken.Grocery.products.products;
+import xyz.xkicken.Grocery.model.products;
 import java.util.List;
 import java.util.Optional;
 

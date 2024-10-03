@@ -1,4 +1,4 @@
-package xyz.xkicken.Grocery.category;
+package xyz.xkicken.Grocery.model;
 
 import org.springframework.data.annotation.Id;
 

@@ -1,4 +1,4 @@
-package xyz.xkicken.Grocery.products;
+package xyz.xkicken.Grocery.model;
 
 import jakarta.validation.constraints.NotEmpty;
 import org.springframework.data.annotation.Id;

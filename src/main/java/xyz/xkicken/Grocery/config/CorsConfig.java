@@ -1,4 +1,4 @@
-package xyz.xkicken.Grocery.controller;
+package xyz.xkicken.Grocery.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

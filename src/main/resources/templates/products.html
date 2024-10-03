@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Product Table</title>
+    <style>
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+<h1 style="text-align: center;">Dynamic Product List</h1>
+
+<table id="dynamicTable">
+    <thead>
+    <tr id="tableHeadRow">
+        <!-- Table Headers will be added here -->
+    </tr>
+    </thead>
+    <tbody id="tableBody">
+    <!-- Data Rows will be inserted here -->
+    </tbody>
+</table>
+
+<script>
+    // Function to dynamically load data from API and populate table
+    async function loadProducts() {
+        try {
+            const response = await fetch('http://localhost:8080/api/products');
+            const products = await response.json();
+
+            // Get table head and body elements
+            const tableHeadRow = document.getElementById('tableHeadRow');
+            const tableBody = document.getElementById('tableBody');
+
+            // Clear existing headers and rows
+            tableHeadRow.innerHTML = '';
+            tableBody.innerHTML = '';
+
+            // Get the keys from the first product object to create column headers
+            const headers = Object.keys(products[0]);
+
+            // Create table headers
+            headers.forEach(header => {
+                const th = document.createElement('th');
+                th.textContent = header.charAt(0).toUpperCase() + header.slice(1); // Capitalize header names
+                tableHeadRow.appendChild(th);
+            });
+
+            // Create table rows dynamically
+            products.forEach(product => {
+                const row = document.createElement('tr');
+
+                // Loop through each key in the product object to create cells
+                headers.forEach(header => {
+                    const cell = document.createElement('td');
+                    cell.textContent = product[header];  // Populate cell with data
+                    row.appendChild(cell);
+                });
+
+                tableBody.appendChild(row);
+            });
+
+        } catch (error) {
+            console.error('Error fetching the products:', error);
+        }
+    }
+
+    // Load the data when the page loads
+    window.onload = loadProducts;
+</script>
+
+</body>
+</html>
