@@ -9,7 +9,7 @@ import xyz.xkicken.Grocery.model.products;
 import java.util.List;
 import java.util.Optional;
 
-@Component  // Add this annotation
+@Component
 public class jdbcProductsRepository {
 
     private static final Logger log = LoggerFactory.getLogger(jdbcProductsRepository.class);

@@ -12,4 +12,5 @@ public class WebController {
         model.addAttribute("name", name);
         return "greeting";
     }
+
 }

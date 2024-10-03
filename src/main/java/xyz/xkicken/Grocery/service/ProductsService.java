@@ -1,45 +1,40 @@
 package xyz.xkicken.Grocery.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import xyz.xkicken.Grocery.jdbcRepository.jdbcProductsRepository;
-import xyz.xkicken.Grocery.repository.productsRepository;
-import xyz.xkicken.Grocery.model.products;
-
 import java.util.List;
 import java.util.Optional;
+import xyz.xkicken.Grocery.jdbcRepository.jdbcProductsRepository;
+import xyz.xkicken.Grocery.model.products;
+import xyz.xkicken.Grocery.repository.productsRepository;
+
 
 @Service
-public class ProductsService {
+public class ProductsService implements productsRepository {
 
-    private final xyz.xkicken.Grocery.repository.productsRepository productsRepository; // JPA Repository
-    private final xyz.xkicken.Grocery.jdbcRepository.jdbcProductsRepository jdbcProductsRepository; // JDBC Repository
+    private static final Logger log = LoggerFactory.getLogger(ProductsService.class);
+    private final jdbcProductsRepository JdbcProductsRepository;  // Inject the repository
 
-    @Autowired
-    public ProductsService(productsRepository productsRepository, jdbcProductsRepository jdbcProductsRepository) {
-        this.productsRepository = productsRepository;
-        this.jdbcProductsRepository = jdbcProductsRepository;
+    public ProductsService(jdbcProductsRepository JdbcProductsRepository) {
+        this.JdbcProductsRepository = JdbcProductsRepository;
     }
 
-    // Use JPA repository for CRUD operations
+    @Override
     public List<products> getAllProducts() {
-        return productsRepository.findAll();
+        log.info("Fetching all products");
+        return JdbcProductsRepository.findAll();
     }
 
+    @Override
     public Optional<products> getProductById(int id) {
-        return productsRepository.findById(id);
+        log.info("Fetching product with ID: {}", id);
+        return JdbcProductsRepository.findById(id);
     }
 
+    @Override
     public List<products> getProductsByCategoryId(int categoryId) {
-        return productsRepository.findBycategoryId(categoryId);
-    }
-
-    // Use JDBC repository for custom queries
-    public List<products> getAllProductsUsingJdbc() {
-        return jdbcProductsRepository.findAll();
-    }
-
-    public Optional<products> getProductByIdUsingJdbc(int id) {
-        return jdbcProductsRepository.findById(id);
+        log.info("Fetching products for category ID: {}", categoryId);
+        return JdbcProductsRepository.findBycategoryId(categoryId);
     }
 }

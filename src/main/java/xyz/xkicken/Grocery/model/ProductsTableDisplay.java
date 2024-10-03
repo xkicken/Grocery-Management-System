@@ -1,6 +1,6 @@
 package xyz.xkicken.Grocery.model;
 
-public record ProductsTableView(
+public record ProductsTableDisplay(
         String productName,
         String categoryName,
         double price,

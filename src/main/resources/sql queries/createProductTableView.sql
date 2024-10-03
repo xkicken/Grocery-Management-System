@@ -1,4 +1,4 @@
-CREATE OR REPLACE VIEW product_table_display AS
+CREATE OR REPLACE VIEW products_table_display AS
 Select product_name,
        category_name,
        price,
@@ -17,4 +17,4 @@ FROM products
          INNER JOIN categories
                     on products.category_id = categories.category_id
 
-DROP VIEW product_table_display
+-- DROP VIEW product_table_display

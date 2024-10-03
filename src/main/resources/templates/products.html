@@ -39,7 +39,7 @@
     // Function to dynamically load data from API and populate table
     async function loadProducts() {
         try {
-            const response = await fetch('http://localhost:8080/api/products');
+            const response = await fetch('http://localhost:8080/api/products/table');
             const products = await response.json();
 
             // Get table head and body elements
