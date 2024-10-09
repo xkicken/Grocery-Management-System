@@ -19,6 +19,12 @@ public class jdbcCategoryRepository {
         this.jdbcClient = jdbcClient;
     }
 
+    public List<category> findAll() {
+        return jdbcClient.sql("SELECT * FROM categories")
+                .query(category.class)
+                .list();
+    }
+
     public void create(category category) {
         var updated = jdbcClient.sql("INSERT INTO category(category_name) values(?)")
                 .params(category.category_name())
