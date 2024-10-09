@@ -27,9 +27,18 @@
 
     <!-- Filter Dropdown -->
     <div class="dropdown">
+        <button onclick="toggleDropdown('myDropdownFilterCategories')" class="dropbtn">
+            <img src="../static/images/icons/FilterIcon.png" alt="Filter Icon">
+            <span>Filter By <br> Categories</span>
+        </button>
+        <div id="myDropdownFilterCategories" class="dropdown-content">
+        </div>
+    </div>
+
+    <div class="dropdown">
         <button onclick="toggleDropdown('myDropdownFilter')" class="dropbtn">
             <img src="../static/images/icons/FilterIcon.png" alt="Filter Icon">
-            <span>Filter By Categories</span>
+            <span style="font-size: 15px">Filter By Shelf Location</span>
         </button>
         <div id="myDropdownFilter" class="dropdown-content">
         </div>

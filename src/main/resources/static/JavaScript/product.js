@@ -71,7 +71,7 @@ async function fetchData(apiEndpoint) {
 
 // Function to populate <a> tags with fetched data
 function populateLinks(categories) {
-    const linksContainer = document.getElementById('myDropdownFilter');
+    const linksContainer = document.getElementById('myDropdownFilterCategories');
     linksContainer.innerHTML = ''; // Clear previous loading message
 
     // Create an <a> tag for each product
