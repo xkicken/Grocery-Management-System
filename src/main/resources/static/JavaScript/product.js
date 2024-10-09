@@ -1,7 +1,7 @@
 // Function to dynamically load data from API and populate table
-async function loadProducts() {
+async function loadProducts(apiEndpoint) {
     try {
-        const response = await fetch('http://localhost:8080/api/products/table');
+        const response = await fetch(apiEndpoint);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -52,7 +52,52 @@ async function loadProducts() {
 }
 
 // Load the data when the page loads
-window.onload = loadProducts;
+window.onload = loadProducts('http://localhost:8080/api/products/table');
+
+// Function to fetch data from the API
+async function fetchData(apiEndpoint) {
+    try {
+        const response = await fetch(apiEndpoint);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        populateLinks(data); // Call function to populate links
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        document.getElementById('myDropdownFilter').innerHTML = 'Error fetching data.';
+    }
+}
+
+// Function to populate <a> tags with fetched data
+function populateLinks(categories) {
+    const linksContainer = document.getElementById('myDropdownFilter');
+    linksContainer.innerHTML = ''; // Clear previous loading message
+
+    // Create an <a> tag for each product
+    categories.forEach(categories => {
+        var id = categories.category_id;
+        const link = document.createElement('a');
+        link.href = `#`; // Set the href attribute
+        link.onclick = function () {ChangeapiEndPoint('http://localhost:8080/api/products/category/' + id)}
+        link.textContent = categories.category_name; // Assuming 'name' is a key in the product object
+
+        // Optional: Add an event listener for clicking on the link
+        // link.addEventListener('click', () => {
+        //     alert(`You clicked on ${categories.name}`);
+        // });
+
+        linksContainer.appendChild(link); // Append the link to the container
+    });
+}
+
+// Load the data when the page loads
+window.onload = () => {
+    const endpoint = 'http://localhost:8080/api/category'; // Change this to your API endpoint
+    fetchData(endpoint); // Call the fetch function with the desired endpoint
+};
+
+
 
 function toggleDropdown(id) {
     const dropdown = document.getElementById(id);
@@ -61,12 +106,17 @@ function toggleDropdown(id) {
 
 window.onclick = function(event) {
     if (!event.target.matches('.dropbtn')) {
-        var dropdowns = document.getElementsByClassName("dropdown-content");
-        for (var i = 0; i < dropdowns.length; i++) {
-            var openDropdown = dropdowns[i];
+        const dropdowns = document.getElementsByClassName("dropdown-content");
+        for (let i = 0; i < dropdowns.length; i++) {
+            const openDropdown = dropdowns[i];
             if (openDropdown.classList.contains('show')) {
                 openDropdown.classList.remove('show');
             }
         }
     }
+}
+
+function ChangeapiEndPoint(apiEndpoint){
+    const endpoint = apiEndpoint;
+    loadProducts(endpoint);
 }

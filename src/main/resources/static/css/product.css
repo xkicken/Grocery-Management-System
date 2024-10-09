@@ -72,6 +72,7 @@ th {
 
 /* Links Inside the Dropdown */
 .dropdown-content a {
+    background-color: #64b7ed;
     color: black;
     padding: 12px 16px;
     text-decoration: none;
