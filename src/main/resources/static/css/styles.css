@@ -1,0 +1,13 @@
+
+.flex-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.flex-container > p{
+    margin: 0;
+}
+.flex-container > a{
+ justify-content: flex-end;
+}
