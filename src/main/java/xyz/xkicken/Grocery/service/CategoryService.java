@@ -4,26 +4,24 @@ package xyz.xkicken.Grocery.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import xyz.xkicken.Grocery.jdbcRepository.jdbcCategoryRepository;
 import xyz.xkicken.Grocery.repository.CategoryRepository;
-import xyz.xkicken.Grocery.model.category;
+import xyz.xkicken.Grocery.model.categories;
 
 import java.util.List;
 
 @Service
-public class CategoryService implements CategoryRepository {
+public class CategoryService{
 
     private final static Logger log = LoggerFactory.getLogger(CategoryService.class);
-    private final jdbcCategoryRepository jdbcCategoryRepository;
+    private final CategoryRepository categoryRepository;
 
-    public CategoryService(jdbcCategoryRepository jdbcCategoryRepository) {
-        this.jdbcCategoryRepository = jdbcCategoryRepository;
+    public CategoryService(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
     }
 
-    @Override
-    public List<category> GetAllCategory() {
+    public List<categories> getAllCategory() {
         log.info("Fetching all categories");
-        return jdbcCategoryRepository.findAll();
+        return categoryRepository.findAll();
     }
 
 

@@ -6,4 +6,5 @@ import xyz.xkicken.Grocery.model.ProductsTableDisplay;
 import java.util.List;
 
 public interface ProductsTableDisplayRepository extends ListCrudRepository<ProductsTableDisplay, Integer> {
+    List<ProductsTableDisplay> findAll();
 }
