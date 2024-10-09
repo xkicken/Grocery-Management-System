@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface ProductsTableDisplayRepository extends ListCrudRepository<ProductsTableDisplay, Integer> {
     List<ProductsTableDisplay> findAll();
+    List<ProductsTableDisplay> findByCategoryId(Integer id);
 }

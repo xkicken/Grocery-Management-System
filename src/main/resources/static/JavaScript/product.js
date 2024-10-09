@@ -25,9 +25,11 @@ async function loadProducts(apiEndpoint) {
 
         // Create table headers
         headers.forEach(header => {
+            if(header !="categoryId"){
             const th = document.createElement('th');
             th.textContent = header.charAt(0).toUpperCase() + header.slice(1); // Capitalize header names
             tableHeadRow.appendChild(th);
+            }
         });
 
         // Create table rows dynamically
@@ -36,9 +38,11 @@ async function loadProducts(apiEndpoint) {
 
             // Loop through each key in the product object to create cells
             headers.forEach(header => {
-                const cell = document.createElement('td');
-                cell.textContent = product[header] !== null ? product[header] : 'N/A';  // Handle null values
-                row.appendChild(cell);
+                if(header !="categoryId") {
+                    const cell = document.createElement('td');
+                    cell.textContent = product[header] !== null ? product[header] : 'N/A';  // Handle null values
+                    row.appendChild(cell);
+                }
             });
 
             tableBody.appendChild(row);
@@ -52,7 +56,7 @@ async function loadProducts(apiEndpoint) {
 }
 
 // Load the data when the page loads
-window.onload = loadProducts('http://localhost:8080/api/products/table');
+window.onload = loadProducts('http://localhost:8080/api/products/table/0/20');
 
 // Function to fetch data from the API
 async function fetchData(apiEndpoint) {
@@ -79,7 +83,7 @@ function populateLinks(categories) {
         var id = categories.category_id;
         const link = document.createElement('a');
         link.href = `#`; // Set the href attribute
-        link.onclick = function () {ChangeapiEndPoint('http://localhost:8080/api/products/category/' + id)}
+        link.onclick = function () {ChangeapiEndPoint('http://localhost:8080/api/products/table/category/' + id)}
         link.textContent = categories.category_name; // Assuming 'name' is a key in the product object
 
         // Optional: Add an event listener for clicking on the link
@@ -120,3 +124,5 @@ function ChangeapiEndPoint(apiEndpoint){
     const endpoint = apiEndpoint;
     loadProducts(endpoint);
 }
+
+

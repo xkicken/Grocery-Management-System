@@ -24,5 +24,4 @@ public class CategoryService{
         return categoryRepository.findAll();
     }
 
-
 }

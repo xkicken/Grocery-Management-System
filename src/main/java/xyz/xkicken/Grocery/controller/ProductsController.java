@@ -55,6 +55,11 @@ public class ProductsController {
         return productsTableDisplayRepository.findAll();
     }
 
+    @GetMapping("/table/category/{id}")
+    public List<ProductsTableDisplay> getProductsTableViewByCategory(@PathVariable Integer id) {
+        return productTableDisplayService.getProductsByCategory(id);
+    }
+
     @GetMapping("/table/{page}/{size}")
     public List<ProductsTableDisplay> getProductsTableViewByPage(@PathVariable Integer page, @PathVariable Integer size) {
         return productTableDisplayService.getProductsTableViewByPage(page, size);

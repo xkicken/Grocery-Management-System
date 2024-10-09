@@ -32,4 +32,9 @@ public class ProductTableDisplayService {
         Pageable pageable = PageRequest.of(page, size);
         return productsTableDisplayPagingRepository.findAll(pageable).getContent();
     }
+
+    public List<ProductsTableDisplay> getProductsByCategory(int id) {
+        log.info("Fetching products by category: {}", id);
+        return productsTableDisplayRepository.findByCategoryId(id);
+    }
 }

@@ -24,4 +24,11 @@ public class jdbcProductTableDisplayRepository {
                 .list();
     }
 
+    public List<ProductsTableDisplay> findByCategoryId(Integer id) {
+        return jdbcClient.sql("select * from products_table_display where category_id = ?")
+                .param(id)
+                .query(ProductsTableDisplay.class)
+                .list();
+    }
+
 }
