@@ -99,6 +99,7 @@ function populateLinks(categories) {
 window.onload = () => {
     const endpoint = 'http://localhost:8080/api/category'; // Change this to your API endpoint
     fetchData(endpoint); // Call the fetch function with the desired endpoint
+    fetchTotalPageCount(20);
 };
 
 
@@ -125,4 +126,44 @@ function ChangeapiEndPoint(apiEndpoint){
     loadProducts(endpoint);
 }
 
+var pageSize = 20
+var pageNumber = 0
 
+function changePageSize(newSize){
+    console.log(newSize);
+    pageSize = newSize
+}
+
+async function fetchTotalPageCount(pageSize) {
+    try {
+        const response = await fetch('http://localhost:8080/api/products/table/pages/' + pageSize);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        genratePageNumbers(data)
+        
+    } catch (error) {
+        console.error('Error fetching Page Count:', error);
+    }
+}
+
+function genratePageNumbers(pageCount){
+    const pageNumberContainer = document.getElementById('pagination-container');
+    pageNumberContainer.innerHTML = '';
+    for(let i = 0; i < pageCount; i++){
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        li.id = 'pageNumber'
+        a.href = '#';
+        a.onclick = function () {ChangeapiEndPoint('http://localhost:8080/api/products/table/' + i +'/' + pageSize)}
+        a.textContent = i + 1;
+        li.appendChild(a);
+        
+        pageNumberContainer.appendChild(li);
+    }
+}
+
+function changePage(){
+    
+}

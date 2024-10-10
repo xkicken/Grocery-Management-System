@@ -31,7 +31,6 @@ public class ProductsController {
         this.productsTableDisplayRepository = productsTableDisplayRepository;
         this.productsTableDisplayPagingRepository = productsTableDisplayPagingRepository;
         this.productTableDisplayService = productTableDisplayService;
-
     };
 
 
@@ -65,4 +64,8 @@ public class ProductsController {
         return productTableDisplayService.getProductsTableViewByPage(page, size);
     }
 
+    @GetMapping("/table/pages/{size}")
+    public Integer getTotalPages(@PathVariable Integer size) {
+        return productTableDisplayService.getTotalPages(size);
+    }
 }

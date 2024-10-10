@@ -58,17 +58,15 @@
 <div>
 <div id="pagination-container">
     <ul class="pagination">
-        <li id="page-1"><a href="#" onclick="changePage(1)">1</a></li>
     </ul>
 </div>
 
 <label></label>
 <select name="page">
-    <option value="10">20</option>
-    <option value="10">10</option>
-    <option value="10">50</option>
-    <option value="10">100</option>
-
+    <option value="10" onclick="changePageSize(20)">100</option>
+    <option value="10" onclick="changePageSize(10)">50</option>
+    <option value="10" onclick="changePageSize(50)">10</option>
+    <option value="10" onclick="changePageSize(100)">20</option>
 </select>
 </div>
 

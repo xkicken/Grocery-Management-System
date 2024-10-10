@@ -12,8 +12,8 @@ public class WebController {
         model.addAttribute("name", name);
         return "greeting";
     }
-    @GetMapping("/layout")
+    @GetMapping("/products")
     public String layout() {
-        return "layout";
+        return "products";
     }
 }

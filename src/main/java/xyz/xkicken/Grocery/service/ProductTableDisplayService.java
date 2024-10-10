@@ -37,4 +37,10 @@ public class ProductTableDisplayService {
         log.info("Fetching products by category: {}", id);
         return productsTableDisplayRepository.findByCategoryId(id);
     }
+
+    public int getTotalPages(int pageSize) {
+        long totalProducts = productsTableDisplayRepository.count();
+        log.info("Total products: {}", totalProducts);
+        return (int) Math.ceil((double) totalProducts / pageSize);
+    }
 }
