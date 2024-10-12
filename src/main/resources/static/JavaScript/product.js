@@ -3,7 +3,7 @@ let pageNumber = 0;
 let currentPage = 0;
 let sortBy = 'productId';
 let direction = 'asc';
-const baseURL = 'http://localhost:8080/api/products/table';
+let baseURL = 'http://localhost:8080/api/products/table';
 
 // Function to fetch categories from the API
 async function fetchCategories(apiEndpoint) {
@@ -121,7 +121,10 @@ window.onclick = function(event) {
 }
 
 function ChangeapiEndPointCategory(id) {
-    ChangeapiEndPoint(baseURL + '/paginated/category/' + id)
+    if(baseURL != 'http://localhost:8080/api/products/table/paginated/category/'){
+        baseURL = 'http://localhost:8080/api/products/table/paginated/category/';
+    }
+    ChangeapiEndPoint(baseURL  + id)
 }
 
 // change api for table
@@ -159,7 +162,7 @@ function genratePageNumbers(pageCount) {
 }
 
 function changePage(){
-    // Implement pagination logic if needed
+
 }
 
 // Load the data when the page loads
