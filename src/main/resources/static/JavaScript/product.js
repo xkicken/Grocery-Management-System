@@ -1,33 +1,42 @@
-var pageSize = 20
-var pageNumber = 0
-var currentPage = 0
+let pageSize = 20;
+let pageNumber = 0;
+let currentPage = 0;
+let sortBy = 'productId';
+let direction = 'asc';
+const baseURL = 'http://localhost:8080/api/products/table';
 
-
-// Function to fetch data from the API for Table
-async function fetchData(apiEndpoint) {
+// Function to fetch categories from the API
+async function fetchCategories(apiEndpoint) {
     try {
         const response = await fetch(apiEndpoint);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const categories = await response.json();
+        populateLinks(categories); // Populate category links
+    } catch (error) {
+        console.error('Error fetching categories:', error);
+        document.getElementById('myDropdownFilterCategories').innerHTML = 'Error fetching categories.';
+    }
+}
+
+// Function to dynamically load products from API and populate table
+async function loadProducts(apiEndpoint) {
+    try {
+        const response = await fetch(apiEndpoint);
+        console.log(apiEndpoint)
+        console.log('Fetch response status:', response.status);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        populateLinks(data); // Call function to populate links
-    } catch (error) {
-        console.error('Error fetching data:', error);
-        document.getElementById('myDropdownFilter').innerHTML = 'Error fetching data.';
-    }
-}
+        console.log('Fetched data:', data);
+        genratePageNumbers(data.totalPages)
 
-// Function to dynamically load data from API and populate table
-async function loadProducts(apiEndpoint) {
-    try {
-        const response = await fetch(apiEndpoint);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const products = await response.json();
+        // Access the 'content' array from the paginated response
+        const products = data.content;
 
-        if (products.length === 0) {
+        if (!Array.isArray(products) || products.length === 0) {
             document.getElementById('tableBody').innerHTML = '<tr><td colspan="100%">No products available.</td></tr>';
             return;
         }
@@ -43,12 +52,12 @@ async function loadProducts(apiEndpoint) {
         // Get the keys from the first product object to create column headers
         const headers = Object.keys(products[0]);
 
-        // Create table headers
+        // Create table headers (excluding 'categoryId' if necessary)
         headers.forEach(header => {
-            if(header !="categoryId"){
-            const th = document.createElement('th');
-            th.textContent = header.charAt(0).toUpperCase() + header.slice(1); // Capitalize header names
-            tableHeadRow.appendChild(th);
+            if (header !== "categoryId") { // Adjust based on your requirements
+                const th = document.createElement('th');
+                th.textContent = header.charAt(0).toUpperCase() + header.slice(1); // Capitalize header names
+                tableHeadRow.appendChild(th);
             }
         });
 
@@ -58,7 +67,7 @@ async function loadProducts(apiEndpoint) {
 
             // Loop through each key in the product object to create cells
             headers.forEach(header => {
-                if(header !="categoryId") {
+                if (header !== "categoryId") { // Adjust based on your requirements
                     const cell = document.createElement('td');
                     cell.textContent = product[header] !== null ? product[header] : 'N/A';  // Handle null values
                     row.appendChild(cell);
@@ -75,23 +84,20 @@ async function loadProducts(apiEndpoint) {
     }
 }
 
-// Function to populate <a> tags with fetched data
+// Function to populate <a> tags with fetched category data
 function populateLinks(categories) {
     const linksContainer = document.getElementById('myDropdownFilterCategories');
-    linksContainer.innerHTML = ''; // Clear previous loading message
+    linksContainer.innerHTML = ''; // Clear previous links
 
-    // Create an <a> tag for each product
-    categories.forEach(categories => {
-        var id = categories.category_id;
+    // Create an <a> tag for each category
+    categories.forEach(category => {
+        const id = category.category_id;
         const link = document.createElement('a');
         link.href = `#`; // Set the href attribute
-        link.onclick = function () {ChangeapiEndPoint('http://localhost:8080/api/products/table/category/1' + id + '/0/20')}
-        link.textContent = categories.category_name; // Assuming 'name' is a key in the product object
-
-        // Optional: Add an event listener for clicking on the link
-        // link.addEventListener('click', () => {
-        //     alert(`You clicked on ${categories.name}`);
-        // });
+        link.onclick = function () {
+            ChangeapiEndPointCategory(id);
+        };
+        link.textContent = category.category_name; // Ensure 'category_name' exists in your data
 
         linksContainer.appendChild(link); // Append the link to the container
     });
@@ -114,57 +120,52 @@ window.onclick = function(event) {
     }
 }
 
-function ChangeapiEndPoint(apiEndpoint){
-    const endpoint = apiEndpoint;
+function ChangeapiEndPointCategory(id) {
+    ChangeapiEndPoint(baseURL + '/paginated/category/' + id)
+}
+
+// change api for table
+function ChangeapiEndPoint(URL, page = 0, size = pageSize, sort = sortBy, directionOrder = direction) {
+    const endpoint = `${URL}?page=${page}&size=${size}&sortBy=${sort}&direction=${directionOrder}`;
     loadProducts(endpoint);
-    fetchData(endpoint);
 }
 
-
-
-function changePageSize(newSize){
-    console.log(newSize);
-    pageSize = newSize
+function changePageSize(newSize) {
+    console.log('Changing page size to:', newSize);
+    pageSize = newSize;
+    // Optionally, reload products with the new page size
+    const newEndpoint = `${baseURL}/paginated?page=${pageNumber}&size=${pageSize}&sortBy=${sortBy}&direction=${direction}`;
+    loadProducts(newEndpoint);
+    fetchTotalPageCount('http://localhost:8080/api/products/table/pages/', pageSize);
 }
 
-async function fetchTotalPageCount(apiEndpoint, pageSize) {
-    try {
-        const response = await fetch(apiEndpoint + pageSize);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        genratePageNumbers(data)
-        
-    } catch (error) {
-        console.error('Error fetching Page Count:', error);
-    }
-}
-
-function genratePageNumbers(pageCount){
+// Function to generate page numbers for pagination
+function genratePageNumbers(pageCount) {
     const pageNumberContainer = document.getElementById('pagination-container');
     pageNumberContainer.innerHTML = '';
-    for(let i = 0; i < pageCount; i++){
+    for (let i = 0; i < pageCount; i++) {
         const li = document.createElement('li');
         const a = document.createElement('a');
-        li.id = 'pageNumber'
+        li.id = 'pageNumber';
         a.href = '#';
-        a.onclick = function () {ChangeapiEndPoint('http://localhost:q80/api/products/table/' + i +'/' + pageSize)}
+        a.onclick = function () {
+            ChangeapiEndPoint(`${baseURL}/paginated/category/`, i);
+        };
         a.textContent = i + 1;
         li.appendChild(a);
-        
+
         pageNumberContainer.appendChild(li);
     }
 }
 
 function changePage(){
-    
+    // Implement pagination logic if needed
 }
 
 // Load the data when the page loads
 window.onload = () => {
-    loadProducts('http://localhost:8080/api/products/table/0/20')
-    const endpoint = 'http://localhost:8080/api/category'; // Change this to your API endpoint
-    fetchData(endpoint); // Call the fetch function with the desired endpoint
-    fetchTotalPageCount('http://localhost:8080/api/products/table/pages/',20);
+    const initialEndpoint = `${baseURL}/paginated?page=0&size=${pageSize}&sortBy=${sortBy}&direction=${direction}`;
+    loadProducts(initialEndpoint);
+    const categoryEndpoint = 'http://localhost:8080/api/category';
+    fetchCategories(categoryEndpoint); // Populate category filter
 };
