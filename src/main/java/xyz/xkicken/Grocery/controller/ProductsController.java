@@ -2,15 +2,13 @@ package xyz.xkicken.Grocery.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.*;
 import xyz.xkicken.Grocery.model.ProductsTableDisplay;
 import xyz.xkicken.Grocery.repository.ProductsTableDisplayPagingRepository;
 import xyz.xkicken.Grocery.repository.ProductsTableDisplayRepository;
-import xyz.xkicken.Grocery.repository.productsRepository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import xyz.xkicken.Grocery.model.products;
+import xyz.xkicken.Grocery.repository.ProductsRepository;
+import xyz.xkicken.Grocery.model.Products;
 import xyz.xkicken.Grocery.service.ProductTableDisplayService;
 
 import java.util.List;
@@ -21,12 +19,12 @@ import java.util.Optional;
 public class ProductsController {
 
     private static final Logger log = LoggerFactory.getLogger(ProductsController.class);
-   private final productsRepository productsRepository;
+   private final ProductsRepository productsRepository;
    private final ProductsTableDisplayRepository productsTableDisplayRepository;
    private final ProductsTableDisplayPagingRepository productsTableDisplayPagingRepository;
    private final ProductTableDisplayService productTableDisplayService;
 
-    public ProductsController(productsRepository productsRepository , ProductsTableDisplayRepository productsTableDisplayRepository, ProductsTableDisplayPagingRepository productsTableDisplayPagingRepository, ProductTableDisplayService productTableDisplayService) {
+    public ProductsController(ProductsRepository productsRepository , ProductsTableDisplayRepository productsTableDisplayRepository, ProductsTableDisplayPagingRepository productsTableDisplayPagingRepository, ProductTableDisplayService productTableDisplayService) {
         this.productsRepository = productsRepository;
         this.productsTableDisplayRepository = productsTableDisplayRepository;
         this.productsTableDisplayPagingRepository = productsTableDisplayPagingRepository;
@@ -35,17 +33,17 @@ public class ProductsController {
 
 
     @GetMapping("")
-    public List<products> getInventory() {
+    public List<Products> getInventory() {
         return productsRepository.findAll();
     }
 
     @GetMapping({"/{id}"})
-    public Optional<products> findById(@PathVariable Integer id) {
+    public Optional<Products> findById(@PathVariable Integer id) {
         return productsRepository.findById(id);
     }
 
     @GetMapping({"/category/{id}"})
-    public List<products> findItemByCategory(@PathVariable Integer id) {
+    public List<Products> findItemByCategory(@PathVariable Integer id) {
         return productsRepository.getProductsByCategoryId(id);
     }
 
@@ -64,8 +62,50 @@ public class ProductsController {
         return productTableDisplayService.getProductsTableViewByPage(page, size);
     }
 
+    @GetMapping("/table/category/{id}/{page}/{size}")
+    public List<ProductsTableDisplay> getProductsTableViewByCategoryAndPage(@PathVariable Integer id, @PathVariable Integer page, @PathVariable Integer size) {
+        return productTableDisplayService.getProductsTableViewByCategoryAndPage(id, page, size);
+    }
+
     @GetMapping("/table/pages/{size}")
     public Integer getTotalPages(@PathVariable Integer size) {
         return productTableDisplayService.getTotalPages(size);
+    }
+
+    @GetMapping("/table/pages/category/{id}/{size}")
+    public Integer getTotalPagesByCategory(@PathVariable Integer id, @PathVariable Integer size) {
+        return productTableDisplayService.getTotalPagesByCategory(id, size);
+    }
+
+    @GetMapping("/table/paginated")
+    public Page<ProductsTableDisplay> getProductPage(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "20") Integer size,
+            @RequestParam(defaultValue = "productName") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction
+    ) {
+        boolean ascending = direction.equalsIgnoreCase("asc");
+        return productTableDisplayService.getProductsTableView(page, size, sortBy, direction);
+    }
+
+    @GetMapping("/table/paginated/category/{id}")
+    public Page<ProductsTableDisplay> getProductsByCategoryId(
+            @PathVariable Integer id,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "productName") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction
+    ) {
+
+        boolean ascending = direction.equalsIgnoreCase("asc");
+        return productTableDisplayService.getProductsTableViewByCategory(id, page, size, sortBy, direction);
+    }
+
+    @GetMapping("/table/paginated/sorted")
+    public Iterable<ProductsTableDisplay> getAllSortedProducts(
+            @RequestParam(defaultValue = "productName") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction
+    ) {
+        return productTableDisplayService.getAllSortedProducts(sortBy, direction);
     }
 }

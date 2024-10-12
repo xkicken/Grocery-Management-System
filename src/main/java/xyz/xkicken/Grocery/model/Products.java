@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotEmpty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Version;
 
-public record products(
+public record Products(
         @Id
         Integer productId,
         @NotEmpty

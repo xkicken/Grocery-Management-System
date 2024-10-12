@@ -2,6 +2,7 @@ package xyz.xkicken.Grocery.model;
 
 import org.springframework.data.annotation.Id;
 
+
 public record ProductsTableDisplay(
         @Id
         Integer productId,

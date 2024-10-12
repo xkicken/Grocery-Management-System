@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Component;
-import xyz.xkicken.Grocery.model.categories;
+import xyz.xkicken.Grocery.model.Categories;
 
 import java.util.List;
 
@@ -18,9 +18,9 @@ public class jdbcCategoryRepository {
         this.jdbcClient = jdbcClient;
     }
 
-    public List<categories> findAll() {
+    public List<Categories> findAll() {
         return jdbcClient.sql("SELECT * FROM categories")
-                .query(categories.class)
+                .query(Categories.class)
                 .list();
     }
 }

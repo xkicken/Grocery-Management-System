@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Component;
-import xyz.xkicken.Grocery.model.products;
+import xyz.xkicken.Grocery.model.Products;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,23 +19,23 @@ public class jdbcProductsRepository {
         this.jdbcClient = jdbcClient;
     }
 
-    public List<products> findAll() {
+    public List<Products> findAll() {
         return jdbcClient.sql("SELECT * FROM products")
-                .query(products.class)
+                .query(Products.class)
                 .list();
     }
 
-    public Optional<products> findById(int id) {
+    public Optional<Products> findById(int id) {
         return jdbcClient.sql("SELECT * FROM products WHERE product_id = ?")
                 .param(id)
-                .query(products.class)
+                .query(Products.class)
                 .optional();
     }
 
-    public List<products> findBycategoryId(int id) {
+    public List<Products> findBycategoryId(int id) {
         return jdbcClient.sql("SELECT * FROM products WHERE category_id = ?")
                 .param(id)
-                .query(products.class)
+                .query(Products.class)
                 .list();
     }
 

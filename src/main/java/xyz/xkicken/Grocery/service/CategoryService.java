@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import xyz.xkicken.Grocery.repository.CategoryRepository;
-import xyz.xkicken.Grocery.model.categories;
+import xyz.xkicken.Grocery.model.Categories;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public class CategoryService{
         this.categoryRepository = categoryRepository;
     }
 
-    public List<categories> getAllCategory() {
+    public List<Categories> getAllCategory() {
         log.info("Fetching all categories");
         return categoryRepository.findAll();
     }

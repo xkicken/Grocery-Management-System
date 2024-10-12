@@ -1,3 +1,23 @@
+var pageSize = 20
+var pageNumber = 0
+var currentPage = 0
+
+
+// Function to fetch data from the API for Table
+async function fetchData(apiEndpoint) {
+    try {
+        const response = await fetch(apiEndpoint);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        populateLinks(data); // Call function to populate links
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        document.getElementById('myDropdownFilter').innerHTML = 'Error fetching data.';
+    }
+}
+
 // Function to dynamically load data from API and populate table
 async function loadProducts(apiEndpoint) {
     try {
@@ -55,24 +75,6 @@ async function loadProducts(apiEndpoint) {
     }
 }
 
-// Load the data when the page loads
-window.onload = loadProducts('http://localhost:8080/api/products/table/0/20');
-
-// Function to fetch data from the API
-async function fetchData(apiEndpoint) {
-    try {
-        const response = await fetch(apiEndpoint);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        populateLinks(data); // Call function to populate links
-    } catch (error) {
-        console.error('Error fetching data:', error);
-        document.getElementById('myDropdownFilter').innerHTML = 'Error fetching data.';
-    }
-}
-
 // Function to populate <a> tags with fetched data
 function populateLinks(categories) {
     const linksContainer = document.getElementById('myDropdownFilterCategories');
@@ -83,7 +85,7 @@ function populateLinks(categories) {
         var id = categories.category_id;
         const link = document.createElement('a');
         link.href = `#`; // Set the href attribute
-        link.onclick = function () {ChangeapiEndPoint('http://localhost:8080/api/products/table/category/' + id)}
+        link.onclick = function () {ChangeapiEndPoint('http://localhost:8080/api/products/table/category/1' + id + '/0/20')}
         link.textContent = categories.category_name; // Assuming 'name' is a key in the product object
 
         // Optional: Add an event listener for clicking on the link
@@ -94,15 +96,6 @@ function populateLinks(categories) {
         linksContainer.appendChild(link); // Append the link to the container
     });
 }
-
-// Load the data when the page loads
-window.onload = () => {
-    const endpoint = 'http://localhost:8080/api/category'; // Change this to your API endpoint
-    fetchData(endpoint); // Call the fetch function with the desired endpoint
-    fetchTotalPageCount(20);
-};
-
-
 
 function toggleDropdown(id) {
     const dropdown = document.getElementById(id);
@@ -124,19 +117,19 @@ window.onclick = function(event) {
 function ChangeapiEndPoint(apiEndpoint){
     const endpoint = apiEndpoint;
     loadProducts(endpoint);
+    fetchData(endpoint);
 }
 
-var pageSize = 20
-var pageNumber = 0
+
 
 function changePageSize(newSize){
     console.log(newSize);
     pageSize = newSize
 }
 
-async function fetchTotalPageCount(pageSize) {
+async function fetchTotalPageCount(apiEndpoint, pageSize) {
     try {
-        const response = await fetch('http://localhost:8080/api/products/table/pages/' + pageSize);
+        const response = await fetch(apiEndpoint + pageSize);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -156,7 +149,7 @@ function genratePageNumbers(pageCount){
         const a = document.createElement('a');
         li.id = 'pageNumber'
         a.href = '#';
-        a.onclick = function () {ChangeapiEndPoint('http://localhost:8080/api/products/table/' + i +'/' + pageSize)}
+        a.onclick = function () {ChangeapiEndPoint('http://localhost:q80/api/products/table/' + i +'/' + pageSize)}
         a.textContent = i + 1;
         li.appendChild(a);
         
@@ -167,3 +160,11 @@ function genratePageNumbers(pageCount){
 function changePage(){
     
 }
+
+// Load the data when the page loads
+window.onload = () => {
+    loadProducts('http://localhost:8080/api/products/table/0/20')
+    const endpoint = 'http://localhost:8080/api/category'; // Change this to your API endpoint
+    fetchData(endpoint); // Call the fetch function with the desired endpoint
+    fetchTotalPageCount('http://localhost:8080/api/products/table/pages/',20);
+};

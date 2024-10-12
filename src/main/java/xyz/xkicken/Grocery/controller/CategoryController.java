@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.xkicken.Grocery.repository.CategoryRepository;
-import xyz.xkicken.Grocery.model.categories;
+import xyz.xkicken.Grocery.model.Categories;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ public class CategoryController {
     }
 
     @GetMapping("")
-    public List<categories> getCategories() {
+    public List<Categories> getCategories() {
         return categoryRepository.findAll();
     }
 }
