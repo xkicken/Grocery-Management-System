@@ -1,0 +1,21 @@
+PUT http://localhost:8080/api/products/1
+Content-Type: application/json
+
+{
+  "productId": 1,
+  "productName": "Cola 1L",
+  "categoryId": 1,
+  "price": 1.5,
+  "stockQuantity": 200,
+  "minStockQuantity": 50,
+  "costPrice": 1,
+  "reorderLevel": 100,
+  "unitOfMeasure": "Bottle",
+  "shelfLocation": "A1",
+  "pluCode": null,
+  "barcode": "4006381333931",
+  "expirationDate": "2025-12-31",
+  "isActive": true,
+  "dateAdded": "2024-10-03",
+  "version": 0
+}

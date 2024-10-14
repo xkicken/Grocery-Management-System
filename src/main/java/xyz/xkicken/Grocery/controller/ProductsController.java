@@ -1,8 +1,11 @@
 package xyz.xkicken.Grocery.controller;
 
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import xyz.xkicken.Grocery.model.ProductsTableDisplay;
 import xyz.xkicken.Grocery.repository.ProductsTableDisplayPagingRepository;
@@ -10,6 +13,7 @@ import xyz.xkicken.Grocery.repository.ProductsTableDisplayRepository;
 import xyz.xkicken.Grocery.repository.ProductsRepository;
 import xyz.xkicken.Grocery.model.Products;
 import xyz.xkicken.Grocery.service.ProductTableDisplayService;
+import xyz.xkicken.Grocery.service.ProductsService;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,12 +27,18 @@ public class ProductsController {
    private final ProductsTableDisplayRepository productsTableDisplayRepository;
    private final ProductsTableDisplayPagingRepository productsTableDisplayPagingRepository;
    private final ProductTableDisplayService productTableDisplayService;
+   private final ProductsService productsService;
 
-    public ProductsController(ProductsRepository productsRepository , ProductsTableDisplayRepository productsTableDisplayRepository, ProductsTableDisplayPagingRepository productsTableDisplayPagingRepository, ProductTableDisplayService productTableDisplayService) {
+    public ProductsController(ProductsRepository productsRepository ,
+                              ProductsTableDisplayRepository productsTableDisplayRepository,
+                              ProductsTableDisplayPagingRepository productsTableDisplayPagingRepository,
+                              ProductTableDisplayService productTableDisplayService,
+                              ProductsService productsService) {
         this.productsRepository = productsRepository;
         this.productsTableDisplayRepository = productsTableDisplayRepository;
         this.productsTableDisplayPagingRepository = productsTableDisplayPagingRepository;
         this.productTableDisplayService = productTableDisplayService;
+        this.productsService = productsService;
     };
 
 
@@ -108,4 +118,14 @@ public class ProductsController {
     ) {
         return productTableDisplayService.getAllSortedProducts(sortBy, direction);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateProducts(
+            @Valid @RequestBody Products product,
+            @PathVariable Integer id) {
+
+        productsService.updateProducts(product, id); // Call the service method to update the product
+        return ResponseEntity.noContent().build();  // Return 204 No Content on success
+    }
+
 }

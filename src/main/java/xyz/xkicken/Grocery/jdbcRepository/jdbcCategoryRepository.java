@@ -18,9 +18,4 @@ public class jdbcCategoryRepository {
         this.jdbcClient = jdbcClient;
     }
 
-    public List<Categories> findAll() {
-        return jdbcClient.sql("SELECT * FROM categories")
-                .query(Categories.class)
-                .list();
-    }
 }
