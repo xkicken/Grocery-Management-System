@@ -1,7 +1,6 @@
 package xyz.xkicken.Grocery.repository;
 
 import org.springframework.data.repository.ListCrudRepository;
-import xyz.xkicken.Grocery.jdbcRepository.jdbcProductsRepository;
 import xyz.xkicken.Grocery.model.Products;
 
 import java.util.List;

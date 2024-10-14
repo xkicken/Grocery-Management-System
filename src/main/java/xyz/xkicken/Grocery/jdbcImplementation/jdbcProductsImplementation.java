@@ -1,4 +1,4 @@
-package xyz.xkicken.Grocery.jdbcRepository;
+package xyz.xkicken.Grocery.jdbcImplementation;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,16 +7,13 @@ import org.springframework.stereotype.Component;
 import xyz.xkicken.Grocery.model.Products;
 import xyz.xkicken.Grocery.repository.CustomProductsRepository;
 
-import java.util.List;
-import java.util.Optional;
-
 @Component
-public class jdbcProductsRepository implements CustomProductsRepository {
+public class jdbcProductsImplementation implements CustomProductsRepository {
 
-    private static final Logger log = LoggerFactory.getLogger(jdbcProductsRepository.class);
+    private static final Logger log = LoggerFactory.getLogger(jdbcProductsImplementation.class);
     private final JdbcClient jdbcClient;
 
-    public jdbcProductsRepository(JdbcClient jdbcClient) {
+    public jdbcProductsImplementation(JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
     }
 

@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dynamic Product Table</title>
     <link rel="stylesheet" href="../static/css/product.css">
-    <script src="../static/JavaScript/product.js"></script>
 </head>
 <body>
 
@@ -13,23 +12,32 @@
 
 <div class="topnav">
     <!-- Sort Dropdown -->
-    <div class="dropdown">
-        <button onclick="toggleDropdown('myDropdown')" class="dropbtn">
-            <img src="../static/images/icons/SortIcon.png" alt="Sort Icon">
-            <span>Sort</span>
+    <div class="dropdown" role="menu">
+        <button onclick="toggleDropdown('myDropdown')" class="dropbtn" role="button">
+            <div class="dropbtn-content">
+                <img src="../static/images/icons/SortIcon.png" alt="Sort Icon">
+                <span>Sort</span>
+            </div>
         </button>
-        <div id="myDropdown" class="dropdown-content">
-            <a href="#" id  ="fetchDataCutton">Price: Low to High</a>
-            <a href="#">Price: High to Low</a>
-            <a href="#">Newest Arrivals</a>
+        <div id="myDropdown" class="dropdown-content" role="menu">
+            <a href="#" id="toggleLink" role="menuitem">
+                <div class="toggle-content">
+                    <span id="toggleText">Product Name Ascending</span>
+                    <img src="../static/images/icons/arrowhead-up-svgrepo-com.svg" alt="Sort Arrow" class="arrow-icon" />
+                </div>
+            </a>
+            <a href="#" role="menuitem">Price: High to Low</a>
+            <a href="#" role="menuitem">Newest Arrivals</a>
         </div>
     </div>
 
     <!-- Filter Dropdown -->
     <div class="dropdown">
         <button onclick="toggleDropdown('myDropdownFilterCategories')" class="dropbtn">
-            <img src="../static/images/icons/FilterIcon.png" alt="Filter Icon">
-            <span>Filter By <br> Categories</span>
+            <div class="dropbtn-content">
+                <img src="../static/images/icons/FilterIcon.png" alt="Filter Icon">
+                <span>Filter By <br> Categories</span>
+            </div>
         </button>
         <div id="myDropdownFilterCategories" class="dropdown-content">
         </div>
@@ -37,14 +45,58 @@
 
     <div class="dropdown">
         <button onclick="toggleDropdown('myDropdownFilter')" class="dropbtn">
-            <img src="../static/images/icons/FilterIcon.png" alt="Filter Icon">
-            <span style="font-size: 15px">Filter By Shelf Location</span>
+            <div class="dropbtn-content">
+                <img src="../static/images/icons/FilterIcon.png" alt="Filter Icon">
+                <span style="font-size: 15px">Filter By Shelf Location</span>
+            </div>
         </button>
         <div id="myDropdownFilter" class="dropdown-content">
         </div>
     </div>
 </div>
+<button onclick="productEditForm(1)">open edit 2</button>
+<div id="formContainer" class="hidden">
 
+</div>
+
+<button class="productEdit" onclick="openEdit()">
+    open edit
+</button>
+
+<div class="editPopup" id="editForm">
+    <form>
+
+        <label></label>
+        <label for="productName"><b>Product Name</b></label>
+        <input id="productName" type="text" placeholder="Cola 1L" name="productName" required>
+
+        <label for="category"><b>Category</b></label>
+        <select id="category" name="category">
+        </select>
+
+        <label for="price"><b>Price</b></label>
+        <input id="price" type="text" placeholder="1.5" name="Price" required>
+
+        <label for="costPrice"><b>Cost Price</b></label>
+        <input id="costPrice" type="text" placeholder="1" name="costPrice" required>
+
+        <label for="unitofMeasure"><b>Unit Of Measurement</b></label>
+        <input id="unitofMeasure" type="text" placeholder="Bottle" name="unitofMeasure" required>
+
+        <label for="shelfLocation"><b>Shelf Location</b></label>
+        <input id="shelfLocation" type="text" placeholder="A1" name="shelfLocation" required>
+
+        <label for="pluCode"><b>PLU Code</b></label>
+        <input id="pluCode" type="text" placeholder="NA" name="pluCode" required>
+
+        <label for="barcode"><b>Barcode</b></label>
+        <input id="barcode" type="text" placeholder="4006381333931" name="barcode" required>
+
+        <button>submit </button>
+        <button class="productEdit" onclick="closeEdit()">Close</button>
+
+    </form>
+</div>
 <table id="dynamicTable">
     <thead>
     <tr id="tableHeadRow">
@@ -63,12 +115,13 @@
 
 <label></label>
 <select name="page">
-    <option value="10" onclick="changePageSize(20)">100</option>
-    <option value="10" onclick="changePageSize(10)">50</option>
-    <option value="10" onclick="changePageSize(50)">10</option>
-    <option value="10" onclick="changePageSize(100)">20</option>
+    <option value="100" onclick="changePageSize(100)">100</option>
+    <option value="50" onclick="changePageSize(50)">50</option>
+    <option value="10" onclick="changePageSize(10)">10</option>
+    <option value="20" onclick="changePageSize(20)">20</option>
 </select>
 </div>
 
+<script src="../static/JavaScript/product.js"></script>
 </body>
 </html>

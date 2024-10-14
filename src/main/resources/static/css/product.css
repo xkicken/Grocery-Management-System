@@ -22,6 +22,21 @@ th {
     background-color: #f2f2f2;
 }
 
+.productEditButton {
+    background-color: #0bb83f;
+    height: 28px;
+    width: 28px;
+    border-radius: 5px;
+    display:inline-block
+}
+
+.productEditButton img{
+    padding-top: 3px;
+    padding-left: 2px;
+    height: 20px;
+    width: 20px;
+}
+
 /* Top Navigation Bar */
 .topnav {
     background-color: #f2f2f2;
@@ -35,16 +50,17 @@ th {
 /* Dropdown Button */
 .dropbtn {
     height: 50px;
-    width: 160px;
+    width: 160px; /* Keep a fixed width */
     background-color: #3498DB;
     color: white;
     font-size: 16px;
-    padding: 10px 20px;
+    padding: 0; /* Remove padding to center content */
     border: none;
     cursor: pointer;
     display: flex;
-    align-items: center;
-    gap: 10px;
+    align-items: center; /* Center items vertically */
+    justify-content: center; /* Center items horizontally */
+    gap: 10px; /* Space between icon and text */
     border-radius: 4px;
 }
 
@@ -66,7 +82,7 @@ th {
     background-color: #f9f9f9;
     min-width: 160px;
     top: 55px; /* Align dropdown below the button */
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     z-index: 1;
     border-radius: 4px;
     overflow: hidden;
@@ -87,9 +103,18 @@ th {
 }
 
 /* Show the Dropdown Menu */
-.show{
+.show {
     display: block;
 }
+
+/* Content Inside Buttons */
+.dropbtn-content {
+    display: flex; /* Ensure flex for inner content */
+    align-items: center; /* Center items vertically */
+    justify-content: center; /* Center items horizontally */
+    width: 100%; /* Take full width of the button */
+}
+
 /* Image Styling Inside Buttons */
 .dropbtn img {
     width: 20px;
@@ -97,6 +122,62 @@ th {
     pointer-events: none; /* Allows the image to inherit the click event from the button */
 }
 
-.dropbtn span{
-    pointer-events: none;
+/* Center the span vertically in the button */
+.dropbtn span {
+    margin: 0; /* Remove margins for perfect vertical alignment */
+    pointer-events: none; /* Not needed for span */
+    text-align: center; /* Ensure text is centered */
+}
+
+/* Media Query for Mobile Responsiveness */
+@media (max-width: 768px) {
+    .topnav {
+        flex-direction: column; /* Stack items vertically */
+        height: auto; /* Allow height to adjust based on content */
+    }
+
+    .dropbtn {
+        width: 100%; /* Make buttons full-width on smaller screens */
+    }
+}
+
+
+.editPopup{
+    display: none;
+}
+
+.toggleLink img{
+    width: 15px;
+    height: 15px;
+}
+
+.arrow-icon{
+    height: 20px;
+    width: 20px;
+}
+
+#toggleLink {
+    display: flex;
+}
+.toggle-content {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.arrow-icon {
+    margin-left: 5px;
+    height: 20px;
+    width: 20px;
+}
+
+.hidden {
+    display: none;
+}
+
+form {
+    margin-top: 20px; /* Space between button and form */
+    border: 1px solid #ccc; /* Border for the form */
+    padding: 20px; /* Padding inside the form */
+    border-radius: 5px; /* Rounded corners */
+    background-color: #f9f9f9; /* Light background color */
 }
