@@ -65,3 +65,28 @@ CREATE TABLE IF NOT EXISTS Customers (
     postal_code VARCHAR(20),
     date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
+
+CREATE VIEW products_table_display AS
+SELECT
+    p.product_id,
+    p.product_name,
+    p.category_id,
+    c.category_name,
+    p.price,
+    p.cost_price,
+    p.stock_quantity,
+    p.unit_of_measure,
+    p.min_stock_quantity,
+    p.reorder_level,
+    p.shelf_location,
+    p.plu_code,
+    p.barcode,
+    p.expiration_date,
+    p.is_active,
+    p.date_added
+FROM
+    Products p
+        INNER JOIN
+    Categories c ON p.category_id = c.category_id;
+
+

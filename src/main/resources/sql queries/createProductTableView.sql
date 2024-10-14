@@ -1,4 +1,4 @@
-CREATE OR REPLACE VIEW products_table_display AS
+CREATE VIEW products_table_display AS
 Select product_id,
        product_name,
        products.category_id,

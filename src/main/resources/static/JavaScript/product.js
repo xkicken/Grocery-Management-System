@@ -20,14 +20,14 @@ async function fetchCategories(apiEndpoint) {
     }
 }
 
-async function fetchCategoriesForm(apiEndpoint) {
+async function fetchCategoriesForm(apiEndpoint, categoryId) {
     try {
         const response = await fetch(apiEndpoint);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const categories = await response.json();
-        populateFormCategory(categories);
+        populateFormCategory(categories, categoryId);
     } catch (error) {
         console.error('Error fetching categories:', error);
         document.getElementById('myDropdownFilterCategories').innerHTML = 'Error fetching categories.';
@@ -138,7 +138,7 @@ function populateLinks(categories) {
     });
 }
 
-function populateFormCategory(categories) {
+function populateFormCategory(categories, categoryId) {
     const selectElement = document.getElementById('category');
     selectElement.innerHTML = '';
     
@@ -146,6 +146,9 @@ function populateFormCategory(categories) {
         const optionElement = document.createElement('option');
         optionElement.textContent = category.category_name;
         optionElement.value = category.category_id;
+        if(category.category_id === categoryId) {
+            optionElement.selected = true;
+        }
         selectElement.appendChild(optionElement);
     })
 }
@@ -307,9 +310,9 @@ function productEditForm(productId, productName, categoryId, categoryName, price
     
     const formContainer = document.getElementById('formContainer');
     
-    formContainer.classList.toggle('hidden');
+    formContainer.classList.toggle('form-popup');
     
-    if(!formContainer.classList.contains('hidden')) {
+    if(!formContainer.classList.contains('form-popup')) {
         
         formContainer.innerHTML = '';
         
@@ -318,28 +321,104 @@ function productEditForm(productId, productName, categoryId, categoryName, price
         const productNameLabel = document.createElement('label');
         productNameLabel.setAttribute('for', 'productName');
         productNameLabel.textContent = 'Product Name'
-        form.appendChild(productNameLabel);
+        formContainer.appendChild(productNameLabel);
         
         const productNameInput = document.createElement('input');
         productNameInput.type = 'text';
         productNameInput.placeholder = productName;
         productNameInput.id = 'productName';
-        productNameInput.required = true;
-        form.appendChild(productNameInput);
+        formContainer.appendChild(productNameInput);
         
         const categoryIdLabel = document.createElement('label');
         categoryIdLabel.setAttribute('for', 'category');
         categoryIdLabel.textContent = 'Category Name'
-        form.appendChild(categoryIdLabel);
+        formContainer.appendChild(categoryIdLabel);
         
         const categoryIdSelect = document.createElement('select');
         categoryIdSelect.type = 'select';
         categoryIdSelect.id = 'category'
         formContainer.appendChild(categoryIdSelect);
         
-        fetchCategoriesForm('http://localhost:8080/api/category')
+        fetchCategoriesForm('http://localhost:8080/api/category', categoryId)
+
+        const priceLabel = document.createElement('label');
+        priceLabel.setAttribute('for', 'price');
+        priceLabel.textContent = 'Price'
+        formContainer.appendChild(priceLabel);
+
+        const priceInput = document.createElement('input');
+        priceInput.type = 'text';
+        priceInput.placeholder = price;
+        priceInput.id = 'price';
+        formContainer.appendChild(priceInput);
+
+        const costPriceLabel = document.createElement('label');
+        costPriceLabel.setAttribute('for', 'costPrice');
+        costPriceLabel.textContent = 'Cost'
+        formContainer.appendChild(costPriceLabel);
+
+        const costPriceInput = document.createElement('input');
+        costPriceInput.type = 'text';
+        costPriceInput.placeholder = costPrice;
+        costPriceInput.id = 'costPrice';
+        formContainer.appendChild(costPriceInput);
+
+        const unitofMeasureLabel = document.createElement('label');
+        unitofMeasureLabel.setAttribute('for', 'unitofMeasure');
+        unitofMeasureLabel.textContent = 'Unitof Measure'
+        formContainer.appendChild(unitofMeasureLabel);
+
+        const unitofMeasureInput = document.createElement('input');
+        unitofMeasureInput.type = 'text';
+        unitofMeasureInput.placeholder = unitofMeasure;
+        unitofMeasureInput.id = 'unitofMeasure';
+        formContainer.appendChild(unitofMeasureInput);
+
+        const shelfLocationLabel = document.createElement('label');
+        shelfLocationLabel.setAttribute('for', 'shelfLocation');
+        shelfLocationLabel.textContent = 'Shelf Location'
+        formContainer.appendChild(shelfLocationLabel);
+
+        const shelfLocationInput = document.createElement('input');
+        shelfLocationInput.type = 'text';
+        shelfLocationInput.placeholder = shelfLocation;
+        shelfLocationInput.id = 'shelfLocation';
+        formContainer.appendChild(shelfLocationInput);
+
+        const pluCodeLabel = document.createElement('label');
+        pluCodeLabel.setAttribute('for', 'pluCode');
+        pluCodeLabel.textContent = 'Plu Code'
+        formContainer.appendChild(pluCodeLabel);
+
+        const pluCodeInput = document.createElement('input');
+        pluCodeInput.type = 'text';
+        pluCodeInput.placeholder = pluCode;
+        pluCodeInput.id = 'pluCode';
+        formContainer.appendChild(pluCodeInput);
+
+        const barcodeLabel = document.createElement('label');
+        barcodeLabel.setAttribute('for', 'barcode');
+        barcodeLabel.textContent = 'Barcode'
+        formContainer.appendChild(barcodeLabel);
+
+        const barcodeInput = document.createElement('input');
+        barcodeInput.type = 'text';
+        barcodeInput.placeholder = barcode;
+        barcodeInput.id = 'barcode';
+        formContainer.appendChild(barcodeInput);
+
+        const closeButton = document.createElement('button');
+        closeButton.textContent = 'Close';
+        closeButton.onclick = function () {
+            closeForm()
+        }
+        formContainer.appendChild(closeButton);
     }
     
+}
+
+function closeForm(){
+    document.getElementById("form-popup").style.display = "none";
 }
 
 
