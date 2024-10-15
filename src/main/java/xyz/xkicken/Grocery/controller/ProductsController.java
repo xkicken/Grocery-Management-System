@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import xyz.xkicken.Grocery.model.ProductsTableDisplay;
@@ -127,5 +126,11 @@ public class ProductsController {
         productsService.updateProducts(product, id); // Call the service method to update the product
         return ResponseEntity.noContent().build();  // Return 204 No Content on success
     }
+
+//    @PostMapping("/{id}")
+//    public ResponseEntity<Void> createProducts(
+//            @PathVariable Integer id) {
+//        productsService.createProduct(product, id);
+//    }
 
 }

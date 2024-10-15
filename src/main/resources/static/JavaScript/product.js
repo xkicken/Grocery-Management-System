@@ -13,7 +13,7 @@ async function fetchCategories(apiEndpoint) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const categories = await response.json();
-        populateFormCategory(categories);
+        populateLinks(categories);
     } catch (error) {
         console.error('Error fetching categories:', error);
         document.getElementById('myDropdownFilterCategories').innerHTML = 'Error fetching categories.';
@@ -289,7 +289,7 @@ document.getElementById('editForm').addEventListener('submit', function(event) {
         barcode : barcode,
     };
 
-    fetch(`https://example.com/api/products/${productId}`, {
+    fetch(`https://localhost:8080/api/products/${productId}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
@@ -307,115 +307,125 @@ document.getElementById('editForm').addEventListener('submit', function(event) {
 });
 
 function productEditForm(productId, productName, categoryId, categoryName, price, costPrice, unitofMeasure, shelfLocation, pluCode, barcode) {
-    
     const formContainer = document.getElementById('formContainer');
-    
-    formContainer.classList.toggle('form-popup');
-    
-    if(!formContainer.classList.contains('form-popup')) {
-        
-        formContainer.innerHTML = '';
-        
-        const form = document.createElement('form');
-        
-        const productNameLabel = document.createElement('label');
-        productNameLabel.setAttribute('for', 'productName');
-        productNameLabel.textContent = 'Product Name'
-        formContainer.appendChild(productNameLabel);
-        
-        const productNameInput = document.createElement('input');
-        productNameInput.type = 'text';
-        productNameInput.placeholder = productName;
-        productNameInput.id = 'productName';
-        formContainer.appendChild(productNameInput);
-        
-        const categoryIdLabel = document.createElement('label');
-        categoryIdLabel.setAttribute('for', 'category');
-        categoryIdLabel.textContent = 'Category Name'
-        formContainer.appendChild(categoryIdLabel);
-        
-        const categoryIdSelect = document.createElement('select');
-        categoryIdSelect.type = 'select';
-        categoryIdSelect.id = 'category'
-        formContainer.appendChild(categoryIdSelect);
-        
-        fetchCategoriesForm('http://localhost:8080/api/category', categoryId)
+    const popup = document.getElementById('myForm');
 
-        const priceLabel = document.createElement('label');
-        priceLabel.setAttribute('for', 'price');
-        priceLabel.textContent = 'Price'
-        formContainer.appendChild(priceLabel);
-
-        const priceInput = document.createElement('input');
-        priceInput.type = 'text';
-        priceInput.placeholder = price;
-        priceInput.id = 'price';
-        formContainer.appendChild(priceInput);
-
-        const costPriceLabel = document.createElement('label');
-        costPriceLabel.setAttribute('for', 'costPrice');
-        costPriceLabel.textContent = 'Cost'
-        formContainer.appendChild(costPriceLabel);
-
-        const costPriceInput = document.createElement('input');
-        costPriceInput.type = 'text';
-        costPriceInput.placeholder = costPrice;
-        costPriceInput.id = 'costPrice';
-        formContainer.appendChild(costPriceInput);
-
-        const unitofMeasureLabel = document.createElement('label');
-        unitofMeasureLabel.setAttribute('for', 'unitofMeasure');
-        unitofMeasureLabel.textContent = 'Unitof Measure'
-        formContainer.appendChild(unitofMeasureLabel);
-
-        const unitofMeasureInput = document.createElement('input');
-        unitofMeasureInput.type = 'text';
-        unitofMeasureInput.placeholder = unitofMeasure;
-        unitofMeasureInput.id = 'unitofMeasure';
-        formContainer.appendChild(unitofMeasureInput);
-
-        const shelfLocationLabel = document.createElement('label');
-        shelfLocationLabel.setAttribute('for', 'shelfLocation');
-        shelfLocationLabel.textContent = 'Shelf Location'
-        formContainer.appendChild(shelfLocationLabel);
-
-        const shelfLocationInput = document.createElement('input');
-        shelfLocationInput.type = 'text';
-        shelfLocationInput.placeholder = shelfLocation;
-        shelfLocationInput.id = 'shelfLocation';
-        formContainer.appendChild(shelfLocationInput);
-
-        const pluCodeLabel = document.createElement('label');
-        pluCodeLabel.setAttribute('for', 'pluCode');
-        pluCodeLabel.textContent = 'Plu Code'
-        formContainer.appendChild(pluCodeLabel);
-
-        const pluCodeInput = document.createElement('input');
-        pluCodeInput.type = 'text';
-        pluCodeInput.placeholder = pluCode;
-        pluCodeInput.id = 'pluCode';
-        formContainer.appendChild(pluCodeInput);
-
-        const barcodeLabel = document.createElement('label');
-        barcodeLabel.setAttribute('for', 'barcode');
-        barcodeLabel.textContent = 'Barcode'
-        formContainer.appendChild(barcodeLabel);
-
-        const barcodeInput = document.createElement('input');
-        barcodeInput.type = 'text';
-        barcodeInput.placeholder = barcode;
-        barcodeInput.id = 'barcode';
-        formContainer.appendChild(barcodeInput);
-
-        const closeButton = document.createElement('button');
-        closeButton.textContent = 'Close';
-        closeButton.onclick = function () {
-            closeForm()
-        }
-        formContainer.appendChild(closeButton);
+    // Toggle the visibility of the popup
+    if (popup.style.display === "flex") {
+        popup.style.display = "none";
+        formContainer.innerHTML = ''; // Clear the form when hiding
+        return;
+    } else {
+        popup.style.display = "flex";
     }
-    
+
+    formContainer.innerHTML = ''; // Clear previous form content
+
+    const form = document.createElement('form');
+
+    // Create form fields
+    const fields = [
+        { id: 'productName', label: 'Product Name', type: 'text', placeholder: productName },
+        { id: 'category', label: 'Category Name', type: 'select', placeholder: categoryName },
+        { id: 'price', label: 'Price', type: 'text', placeholder: price },
+        { id: 'costPrice', label: 'Cost', type: 'text', placeholder: costPrice },
+        { id: 'unitofMeasure', label: 'Unit of Measure', type: 'text', placeholder: unitofMeasure },
+        { id: 'shelfLocation', label: 'Shelf Location', type: 'text', placeholder: shelfLocation },
+        { id: 'pluCode', label: 'Plu Code', type: 'text', placeholder: pluCode },
+        { id: 'barcode', label: 'Barcode', type: 'text', placeholder: barcode },
+    ];
+
+    fields.forEach(field => {
+        const label = document.createElement('label');
+        label.setAttribute('for', field.id);
+        label.textContent = field.label;
+        formContainer.appendChild(label);
+
+        if (field.type === 'select') {
+            const select = document.createElement('select');
+            select.id = field.id;
+            formContainer.appendChild(select);
+
+            fetchCategoriesForm('http://localhost:8080/api/category', categoryId);
+        } else {
+            const input = document.createElement('input');
+            input.type = field.type;
+            input.placeholder = field.placeholder;
+            input.id = field.id;
+            formContainer.appendChild(input);
+        }
+    });
+
+    // Create close button
+    const closeButton = document.createElement('button');
+    closeButton.type = 'button'; // Prevent form submission
+    closeButton.textContent = 'Close';
+    closeButton.onclick = function () {
+        popup.style.display = 'none';
+        formContainer.innerHTML = ''; // Clear the form when closing
+    };
+    formContainer.appendChild(closeButton);
+
+    // Create submit button
+    const submitButton = document.createElement('button');
+    submitButton.type = 'submit'; // Use type "submit" for form submission
+    submitButton.textContent = 'Save';
+    formContainer.appendChild(submitButton);
+
+    // Handle form submission
+    formContainer.onsubmit = function (event) {
+        event.preventDefault(); // Prevent page refresh
+        // Collect form data and handle submission logic here
+        if(document.getElementById('productName').value === '') {
+            document.getElementById('productName').value = productName;
+        }
+        if(document.getElementById('category').value === '') {
+            document.getElementById('category').value = categoryName;
+        }
+        if(document.getElementById('price').value === '') {
+            document.getElementById('price').value = price;
+        }
+        if(document.getElementById('costPrice').value === '') {
+            document.getElementById('costPrice').value = costPrice;
+        }
+        if(document.getElementById('unitofMeasure').value === '') {
+            document.getElementById('unitofMeasure').value = unitofMeasure;
+        }
+        if(document.getElementById('shelfLocation').value === '') {
+            document.getElementById('shelfLocation').value = shelfLocation;
+        }
+        if(document.getElementById('barcode').value === '') {
+            document.getElementById('barcode').value = barcode;
+        }
+
+        const formData = {
+            productId,
+            productName: document.getElementById('productName').value,
+            categoryId: document.getElementById('category').value,
+            price: document.getElementById('price').value,
+            costPrice: document.getElementById('costPrice').value,
+            unitofMeasure: document.getElementById('unitofMeasure').value,
+            shelfLocation: document.getElementById('shelfLocation').value,
+            pluCode: document.getElementById('pluCode').value,
+            barcode: document.getElementById('barcode').value,
+        };
+        console.log('Form Data:', formData);
+
+
+        fetch(`https://localhost:8080/api/products/${productId}`,{
+            method: 'PUT',
+                headers: {'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+        })
+            .then(response => response.json())
+            .then(data => {})
+
+        popup.style.display = 'none';
+        formContainer.innerHTML = ''; // Clear the form content
+    };
 }
+
 
 function closeForm(){
     document.getElementById("form-popup").style.display = "none";

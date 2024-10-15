@@ -186,7 +186,6 @@ th {
     background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity */
     justify-content: center; /* Center horizontally */
     align-items: center; /* Center vertically */
-    display: flex; /* Use flexbox to align items */
 }
 
 #formContainer {
