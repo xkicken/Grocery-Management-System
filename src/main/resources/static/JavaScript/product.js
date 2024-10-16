@@ -200,38 +200,10 @@ window.onclick = function(event) {
     }
 };
 
-
 document.querySelector('.dropbtn-content').addEventListener('click', function(event) {
     event.stopPropagation();
     toggleDropdown('myDropdown');
 });
-
-function ChangeapEndPointPage(pageNumber){
-    ChangeapiEndPoint(baseURL, pageNumber);
-}
-
-function ChangeapiEndPointCategory(id) {
-    currentPage = 0
-    if(baseURL != 'http://localhost:8080/api/products/table/paginated/category/'){
-        baseURL = 'http://localhost:8080/api/products/table/paginated/category/' + id;
-    }
-    ChangeapiEndPoint(baseURL)
-}
-
-//Change api for table
-function ChangeapiEndPoint(URL, page = 0, size = pageSize, sort = sortBy, directionOrder = direction) {
-    const endpoint = `${URL}?page=${page}&size=${size}&sortBy=${sort}&direction=${directionOrder}`;
-    url = endpoint
-    loadProducts(endpoint);
-}
-
-function changePageSize(newSize) {
-    currentPage = 0;
-    console.log(baseURL)
-    console.log('Changing page size to:', newSize);
-    pageSize = newSize;
-    ChangeapiEndPoint(baseURL, 0, pageSize);
-}
 
 function generatePageNumbers(pageCount) {
     const paginationContainer = document.getElementById('pagination-container');
@@ -479,10 +451,6 @@ function productEditForm(productId, productName, categoryId, categoryName, price
     };
 }
 
-function closeForm(){
-    document.getElementById("form-popup").style.display = "none";
-}
-
 function confirmDelete(productId, productName) {
     const deleteContainer = document.getElementById('deleteContainer');
     const deletePopup = document.getElementById('deleteConfirm');
@@ -639,6 +607,33 @@ function productCreateForm() {
         popup.style.display = 'none';
         formContainer.innerHTML = '';
     };
+}
+
+function ChangeapEndPointPage(pageNumber){
+    ChangeapiEndPoint(baseURL, pageNumber);
+}
+
+function ChangeapiEndPointCategory(id) {
+    currentPage = 0
+    if(baseURL != 'http://localhost:8080/api/products/table/paginated/category/'){
+        baseURL = 'http://localhost:8080/api/products/table/paginated/category/' + id;
+    }
+    ChangeapiEndPoint(baseURL)
+}
+
+//Change api for table
+function ChangeapiEndPoint(URL, page = 0, size = pageSize, sort = sortBy, directionOrder = direction) {
+    const endpoint = `${URL}?page=${page}&size=${size}&sortBy=${sort}&direction=${directionOrder}`;
+    url = endpoint
+    loadProducts(endpoint);
+}
+
+function changePageSize(newSize) {
+    currentPage = 0;
+    console.log(baseURL)
+    console.log('Changing page size to:', newSize);
+    pageSize = newSize;
+    ChangeapiEndPoint(baseURL, 0, pageSize);
 }
 
 // Load the data when the page loads
