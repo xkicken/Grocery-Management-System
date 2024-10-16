@@ -1,4 +1,4 @@
-package xyz.xkicken.Grocery.model;
+package xyz.xkicken.Grocery.Products.model;
 
 import org.springframework.data.annotation.Id;
 

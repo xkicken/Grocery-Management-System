@@ -1,15 +1,12 @@
-package xyz.xkicken.Grocery.service;
+package xyz.xkicken.Grocery.Products.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import xyz.xkicken.Grocery.model.Products;
-import xyz.xkicken.Grocery.repository.CustomProductsRepository;
-import xyz.xkicken.Grocery.repository.ProductsRepository;
+import xyz.xkicken.Grocery.Products.model.Products;
+import xyz.xkicken.Grocery.Products.repository.CustomProductsRepository;
+import xyz.xkicken.Grocery.Products.repository.ProductsRepository;
 
-import javax.swing.text.html.Option;
-import java.time.LocalDate;
-import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 

@@ -1,11 +1,11 @@
-package xyz.xkicken.Grocery.jdbcImplementation;
+package xyz.xkicken.Grocery.Products.jdbcImplementation;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Component;
-import xyz.xkicken.Grocery.model.Products;
-import xyz.xkicken.Grocery.repository.CustomProductsRepository;
+import xyz.xkicken.Grocery.Products.model.Products;
+import xyz.xkicken.Grocery.Products.repository.CustomProductsRepository;
 
 @Component
 public class jdbcProductsImplementation implements CustomProductsRepository {

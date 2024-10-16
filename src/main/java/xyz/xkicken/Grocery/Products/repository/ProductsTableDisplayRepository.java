@@ -1,8 +1,8 @@
-package xyz.xkicken.Grocery.repository;
+package xyz.xkicken.Grocery.Products.repository;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.ListCrudRepository;
-import xyz.xkicken.Grocery.model.ProductsTableDisplay;
+import xyz.xkicken.Grocery.Products.model.ProductsTableDisplay;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package xyz.xkicken.Grocery.jdbcImplementation;
+package xyz.xkicken.Grocery.Products.jdbcImplementation;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

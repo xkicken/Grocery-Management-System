@@ -1,11 +1,11 @@
-package xyz.xkicken.Grocery.service;
+package xyz.xkicken.Grocery.Products.service;
 
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import xyz.xkicken.Grocery.repository.CategoryRepository;
-import xyz.xkicken.Grocery.model.Categories;
+import xyz.xkicken.Grocery.Products.repository.CategoryRepository;
+import xyz.xkicken.Grocery.Products.model.Categories;
 
 import java.util.List;
 
