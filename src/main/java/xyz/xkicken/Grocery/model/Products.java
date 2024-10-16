@@ -11,7 +11,6 @@ public record Products(
         String productName,
         Integer categoryId,
         Double price,
-        Integer stockQuantity,
         Integer minStockQuantity,
         Double costPrice,
         Double reorderLevel,
@@ -19,7 +18,6 @@ public record Products(
         String shelfLocation,
         String pluCode,
         String barcode,
-        String expirationDate,
         Boolean isActive,
         String dateAdded,
         @Version

@@ -32,4 +32,10 @@ public class jdbcProductsImplementation implements CustomProductsRepository {
                 .update();
     }
 
+    public void deleteProducts(int id) {
+        var deleted = jdbcClient.sql("DELETE FROM products WHERE product_id = ?")
+                .param(id)
+                .update();
+    }
+
 }

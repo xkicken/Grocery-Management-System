@@ -19,3 +19,37 @@ Content-Type: application/json
   "dateAdded": "2024-10-03",
   "version": 0
 }
+
+### edit
+PUT http://localhost:8080/api/products/1
+Content-Type: application/json
+
+{
+  "barcode": "4006381333931",
+  "categoryId": "2",
+  "costPrice": 1,
+  "pluCode": "",
+  "price": 1.5,
+  "productId": 1,
+  "productName": "test",
+  "shelfLocation": "A1",
+  "unitOfMeasure": "Bottle"
+}
+
+### delete
+DELETE http://localhost:8080/api/products/1
+
+###
+POST http://localhost:8080/api/products
+Content-Type: application/json
+
+{
+  "barcode": "4006381333931",
+  "categoryId": 1,
+  "costPrice": 1,
+  "pluCode": "",
+  "price": 1.5,
+  "productName": "test",
+  "shelfLocation": "A1",
+  "unitOfMeasure": "Bottle"
+}

@@ -127,6 +127,20 @@ public class ProductsController {
         return ResponseEntity.noContent().build();  // Return 204 No Content on success
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProducts(
+            @PathVariable Integer id) {
+        productsRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping
+    public ResponseEntity<Void> createProducts(
+            @Valid @RequestBody Products product) {
+        productsRepository.save(product);
+        return ResponseEntity.noContent().build();
+    }
+
 //    @PostMapping("/{id}")
 //    public ResponseEntity<Void> createProducts(
 //            @PathVariable Integer id) {

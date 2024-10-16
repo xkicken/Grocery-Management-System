@@ -4,6 +4,7 @@ let currentPage = 0;
 let sortBy = 'productId';
 let direction = 'asc';
 let baseURL = 'http://localhost:8080/api/products/table/paginated';
+let url = ''
 
 // Function to fetch categories from the API
 async function fetchCategories(apiEndpoint) {
@@ -34,7 +35,6 @@ async function fetchCategoriesForm(apiEndpoint, categoryId) {
     }
 }
 
-
 // Function to dynamically load products from API and populate table
 async function loadProducts(apiEndpoint) {
     try {
@@ -46,7 +46,7 @@ async function loadProducts(apiEndpoint) {
         }
         const data = await response.json();
         console.log('Fetched data:', data);
-        genratePageNumbers(data.totalPages)
+        generatePageNumbers(data.totalPages)
 
         // Access the 'content' array from the paginated response
         const products = data.content;
@@ -68,12 +68,26 @@ async function loadProducts(apiEndpoint) {
         const headers = Object.keys(products[0]);
 
         const th = document.createElement('th');
-        th.textContent = "edit";
+        th.textContent = "";
+
+        const createButton = document.createElement('a');
+        createButton.href = '#';
+        createButton.classList.add('productButton')
+        createButton.style.backgroundColor = '#28a745'
+        createButton.onclick = function () {
+            productCreateForm()
+        }
+
+        const createImg = document.createElement('img');
+        createImg.src = '../static/images/icons/create-svgrepo-com.svg'
+
+        createButton.appendChild(createImg);
+        th.appendChild(createButton);
         tableHeadRow.appendChild(th);
         
         
         
-        // Create table headers (excluding 'categoryId' if necessary)
+        // Create table headers (excluding 'categoryId')
         headers.forEach(header => {
             if (header !== "categoryId") { // Adjust based on your requirements
                 const th = document.createElement('th');
@@ -88,24 +102,42 @@ async function loadProducts(apiEndpoint) {
             
             const td = document.createElement('td');
             
-            const a = document.createElement('a');
-            a.href = '#'
-            a.classList.add('productEditButton');
-            a.onclick = function () {
-                productEditForm(product.productId, product.productName, product.categoryId, product.categoryName, product.price, product.costPrice, product.unitofMeasure, product.shelfLocation, product.pluCode, product.barcode);
+            const buttonDiv = document.createElement('ul');
+            buttonDiv.classList.add('productEdit');
+            
+            const updateButton = document.createElement('a');
+            updateButton.href = '#'
+            updateButton.classList.add('productButton');
+            updateButton.style.backgroundColor = "#007bff";
+            updateButton.onclick = function () {
+                productEditForm(product.productId, product.productName, product.categoryId, product.categoryName, product.price, product.costPrice, product.unitOfMeasure, product.minStockQuantity, product.reorderLevel, product.shelfLocation, product.pluCode, product.barcode);
             }
             
-            const img = document.createElement('img');
-            img.src = '../static/images/icons/edit-button-svgrepo-com.svg'
-            a.appendChild(img);
-            td.appendChild(a);
-            row.appendChild(td);
+            const imgUpdate = document.createElement('img');
+            imgUpdate.src = '../static/images/icons/edit-button-svgrepo-com.svg'
+            updateButton.appendChild(imgUpdate);
+            buttonDiv.appendChild(updateButton);
             
-                // Loop through each key in the product object to create cells
+            const deleteButton = document.createElement('a');
+            deleteButton.href = '#'
+            deleteButton.classList.add('productButton');
+            deleteButton.classList.add('productDelete');
+            deleteButton.style.backgroundColor = '#dc3545';
+            deleteButton.onclick = function () {
+                confirmDelete(product.productId, product.productName)
+            }
+            
+            const imgDelete = document.createElement('img');
+            imgDelete.src = '../static/images/icons/delete-button-svgrepo-com.svg'
+            deleteButton.appendChild(imgDelete);
+            buttonDiv.appendChild(deleteButton);
+            td.appendChild(buttonDiv);
+            row.appendChild(td);
+
             headers.forEach(header => {
-                if (header !== "categoryId") { // Adjust based on your requirements
+                if (header !== "categoryId") {
                     const cell = document.createElement('td');
-                    cell.textContent = product[header] !== null ? product[header] : 'N/A';  // Handle null values
+                    cell.textContent = product[header] !== null ? product[header] : 'N/A';
                     row.appendChild(cell);
                 }
             });
@@ -120,21 +152,19 @@ async function loadProducts(apiEndpoint) {
     }
 }
 
-// Function to populate <a> tags with fetched category data
 function populateLinks(categories) {
     const linksContainer = document.getElementById('myDropdownFilterCategories');
-    linksContainer.innerHTML = ''; // Clear previous links
-    // Create an <a> tag for each category
+    linksContainer.innerHTML = '';
     categories.forEach(category => {
         const id = category.category_id;
         const link = document.createElement('a');
-        link.href = `#`; // Set the href attribute
+        link.href = `#`;
         link.onclick = function () {
             ChangeapiEndPointCategory(id);
         };
-        link.textContent = category.category_name; // Ensure 'category_name' exists in your data
+        link.textContent = category.category_name;
 
-        linksContainer.appendChild(link); // Append the link to the container
+        linksContainer.appendChild(link);
     });
 }
 
@@ -159,177 +189,180 @@ function toggleDropdown(id) {
 }
 
 window.onclick = function(event) {
-    // Check if the click was outside the dropdown button and its content
     if (!event.target.matches('.dropbtn') && !event.target.closest('.dropbtn-content')) {
         const dropdowns = document.getElementsByClassName("dropdown-content");
         for (let i = 0; i < dropdowns.length; i++) {
             const openDropdown = dropdowns[i];
             if (openDropdown.classList.contains('show')) {
-                openDropdown.classList.remove('show'); // Close the dropdown
+                openDropdown.classList.remove('show');
             }
         }
     }
 };
 
-// Optional: Add event listener directly to the dropbtn-content
+
 document.querySelector('.dropbtn-content').addEventListener('click', function(event) {
-    event.stopPropagation(); // Prevent the click from propagating to window
-    toggleDropdown('myDropdown'); // Toggle the dropdown explicitly
+    event.stopPropagation();
+    toggleDropdown('myDropdown');
 });
 
 function ChangeapEndPointPage(pageNumber){
-    console.log(pageNumber);
-    currentPage = pageNumber;
     ChangeapiEndPoint(baseURL, pageNumber);
 }
 
 function ChangeapiEndPointCategory(id) {
+    currentPage = 0
     if(baseURL != 'http://localhost:8080/api/products/table/paginated/category/'){
         baseURL = 'http://localhost:8080/api/products/table/paginated/category/' + id;
     }
     ChangeapiEndPoint(baseURL)
 }
 
-// change api for table
+//Change api for table
 function ChangeapiEndPoint(URL, page = 0, size = pageSize, sort = sortBy, directionOrder = direction) {
     const endpoint = `${URL}?page=${page}&size=${size}&sortBy=${sort}&direction=${directionOrder}`;
+    url = endpoint
     loadProducts(endpoint);
 }
 
 function changePageSize(newSize) {
+    currentPage = 0;
     console.log(baseURL)
     console.log('Changing page size to:', newSize);
     pageSize = newSize;
     ChangeapiEndPoint(baseURL, 0, pageSize);
 }
 
-// Function to generate page numbers for pagination
-function genratePageNumbers(pageCount) {
-    const pageNumberContainer = document.getElementById('pagination-container');
-    pageNumberContainer.innerHTML = '';
+function generatePageNumbers(pageCount) {
+    const paginationContainer = document.getElementById('pagination-container');
+    const paginationList = document.createElement('ul');
+    paginationList.className = 'pagination';
+    paginationContainer.innerHTML = '';
+
     for (let i = 0; i < pageCount; i++) {
         const li = document.createElement('li');
         const a = document.createElement('a');
-        li.id = 'pageNumber';
         a.href = '#';
-        a.onclick = function () {
-            ChangeapEndPointPage(i);
-        };
         a.textContent = i + 1;
+
+        a.addEventListener('click', function(event) {
+            event.preventDefault();
+            ChangeapEndPointPage(i);
+            currentPage = i
+            highlightActivePage(i);
+        });
+
         li.appendChild(a);
+        paginationList.appendChild(li);
 
-        pageNumberContainer.appendChild(li);
+
+        if (i === currentPage) {
+            a.classList.add('active');
+        }
     }
+
+    paginationContainer.appendChild(paginationList);
 }
 
-function openEdit(){
-    document.getElementById("editForm").style.display = "block";
-}
-
-function closeEdit(){
-    document.getElementById("editForm").style.display = "none";
+function highlightActivePage(activeIndex) {
+    const pageLinks = document.querySelectorAll('.pagination a');
+    console.log(pageLinks);
+    pageLinks.forEach((link, index) => {
+        if (index === activeIndex) {
+            console.log('active page add', activeIndex);
+            console.log(link);
+            link.classList.add('active');
+        } else {
+            console.log('active page remove', activeIndex);
+            link.classList.remove('active');
+        }
+    });
+    console.log(pageLinks);
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    const toggleLink = document.getElementById('toggleLink');
-    const toggleText = document.getElementById('toggleText'); // Select the text span
-    let asc = true;
+    const toggleLinkName = document.getElementById('toggleLinkName');
+    const toggleTextName = document.getElementById('toggleTextName');
+    let nameasc = true;
 
-    toggleLink.addEventListener('click', function(event) {
+    toggleLinkName.addEventListener('click', function(event) {
         event.preventDefault();
 
-        // Select the arrow image using its class
-        const arrowImage = toggleLink.querySelector('.arrow-icon');
+        const arrowImage = toggleLinkName.querySelector('.arrow-icon');
 
-        if (asc) {
-            sortByPriceASC(); // Call function for ascending sort
-            arrowImage.src = "../static/images/icons/arrowhead-down-svgrepo-com.svg"; // Update the image source
-            toggleText.textContent = "Product Name Descending"; // Update link text
+        if (nameasc) {
+            sortByASC('productName');
+            arrowImage.src = "../static/images/icons/arrowhead-down-svgrepo-com.svg";
+            toggleTextName.textContent = "Product Name Descending";
         } else {
-            sortByPriceDESC(); // Call function for descending sort
-            arrowImage.src = "../static/images/icons/arrowhead-up-svgrepo-com.svg"; // Update the image source
-            toggleText.textContent = "Product Name Ascending"; // Update link text
+            sortByDESC('productName');
+            arrowImage.src = "../static/images/icons/arrowhead-up-svgrepo-com.svg";
+            toggleTextName.textContent = "Product Name Ascending";
         }
 
-        asc = !asc; // Toggle the state
+        nameasc = !nameasc;
     });
 });
 
+document.addEventListener('DOMContentLoaded', function() {
+    const toggleLinkPrice = document.getElementById('toggleLinkPrice');
+    const toggleTextPrice = document.getElementById('toggleTextPrice');
+    let priceasc = true;
 
+    toggleLinkPrice.addEventListener('click', function(event) {
+        event.preventDefault();
 
-function sortByPriceASC(){
-    ChangeapiEndPoint(baseURL, pageNumber, pageSize, 'productName', 'asc');
-}
+        const arrowImage = toggleLinkPrice.querySelector('.arrow-icon');
 
-function sortByPriceDESC(){
-    ChangeapiEndPoint(baseURL, pageNumber, pageSize, 'productName', 'desc');
-}
+        if (priceasc) {
+            sortByASC('price');
+            arrowImage.src = "../static/images/icons/arrowhead-down-svgrepo-com.svg";
+            toggleTextPrice.textContent = "Product Price Descending";
+        } else {
+            sortByDESC('price');
+            arrowImage.src = "../static/images/icons/arrowhead-up-svgrepo-com.svg";
+            toggleTextPrice.textContent = "Product Price Ascending";
+        }
 
-document.getElementById('editForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-    
-    const productName = document.getElementById('productName').value;
-    const category = document.getElementById('category').value;
-    const price = document.getElementById('price').value;
-    const costPrice = document.getElementById('costPrice').value;
-    const unitofMeasure = document.getElementById('unitofMeasure').value;
-    const shelfLocation = document.getElementById('shelfLocation').value;
-    const pluCode = document.getElementById('pluCode').value;
-    const barcode = document.getElementById('barcode').value;
-    
-
-    const data = {
-        productName : productName,
-        category: category,
-        price : price,
-        costPrice : costPrice,
-        unitofMeasure : unitofMeasure,
-        shelfLocation : shelfLocation,
-        pluCode : pluCode,
-        barcode : barcode,
-    };
-
-    fetch(`https://localhost:8080/api/products/${productId}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    })
-        .then(response => response.json())
-        .then(data => {
-            alert('Product updated successfully!');
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred while updating the product.');
-        });
+        priceasc = !priceasc;
+    });
 });
 
-function productEditForm(productId, productName, categoryId, categoryName, price, costPrice, unitofMeasure, shelfLocation, pluCode, barcode) {
+function sortByASC(sortBy){
+    currentPage = 0
+    ChangeapiEndPoint(baseURL, pageNumber, pageSize, sortBy, 'asc');
+}
+
+function sortByDESC(sortBy){
+    currentPage = 0
+    ChangeapiEndPoint(baseURL, pageNumber, pageSize, sortBy, 'desc');
+}
+
+function productEditForm(productId, productName, categoryId, categoryName, price, costPrice, unitOfMeasure, minStockQuantity, reorderLevel,shelfLocation, pluCode, barcode) {
     const formContainer = document.getElementById('formContainer');
     const popup = document.getElementById('myForm');
 
     // Toggle the visibility of the popup
     if (popup.style.display === "flex") {
         popup.style.display = "none";
-        formContainer.innerHTML = ''; // Clear the form when hiding
+        formContainer.innerHTML = '';
         return;
     } else {
         popup.style.display = "flex";
     }
 
-    formContainer.innerHTML = ''; // Clear previous form content
+    formContainer.innerHTML = '';
 
     const form = document.createElement('form');
 
-    // Create form fields
     const fields = [
         { id: 'productName', label: 'Product Name', type: 'text', placeholder: productName },
         { id: 'category', label: 'Category Name', type: 'select', placeholder: categoryName },
         { id: 'price', label: 'Price', type: 'text', placeholder: price },
         { id: 'costPrice', label: 'Cost', type: 'text', placeholder: costPrice },
-        { id: 'unitofMeasure', label: 'Unit of Measure', type: 'text', placeholder: unitofMeasure },
+        { id: 'unitOfMeasure', label: 'Unit of Measure', type: 'text', placeholder: unitOfMeasure },
+        { id: 'minStockQuantity', label: 'Min Stick Quantity' , type: 'text', placeholder: minStockQuantity },
+        { id: 'reorderLevel', label: 'Reorder level', type: 'text', placeholder: reorderLevel },
         { id: 'shelfLocation', label: 'Shelf Location', type: 'text', placeholder: shelfLocation },
         { id: 'pluCode', label: 'Plu Code', type: 'text', placeholder: pluCode },
         { id: 'barcode', label: 'Barcode', type: 'text', placeholder: barcode },
@@ -358,24 +391,23 @@ function productEditForm(productId, productName, categoryId, categoryName, price
 
     // Create close button
     const closeButton = document.createElement('button');
-    closeButton.type = 'button'; // Prevent form submission
+    closeButton.type = 'button';
     closeButton.textContent = 'Close';
     closeButton.onclick = function () {
         popup.style.display = 'none';
-        formContainer.innerHTML = ''; // Clear the form when closing
+        formContainer.innerHTML = '';
     };
     formContainer.appendChild(closeButton);
 
     // Create submit button
     const submitButton = document.createElement('button');
-    submitButton.type = 'submit'; // Use type "submit" for form submission
+    submitButton.type = 'submit';
     submitButton.textContent = 'Save';
     formContainer.appendChild(submitButton);
 
     // Handle form submission
     formContainer.onsubmit = function (event) {
-        event.preventDefault(); // Prevent page refresh
-        // Collect form data and handle submission logic here
+        event.preventDefault();
         if(document.getElementById('productName').value === '') {
             document.getElementById('productName').value = productName;
         }
@@ -388,8 +420,8 @@ function productEditForm(productId, productName, categoryId, categoryName, price
         if(document.getElementById('costPrice').value === '') {
             document.getElementById('costPrice').value = costPrice;
         }
-        if(document.getElementById('unitofMeasure').value === '') {
-            document.getElementById('unitofMeasure').value = unitofMeasure;
+        if(document.getElementById('unitOfMeasure').value === '') {
+            document.getElementById('unitOfMeasure').value = unitOfMeasure;
         }
         if(document.getElementById('shelfLocation').value === '') {
             document.getElementById('shelfLocation').value = shelfLocation;
@@ -397,44 +429,222 @@ function productEditForm(productId, productName, categoryId, categoryName, price
         if(document.getElementById('barcode').value === '') {
             document.getElementById('barcode').value = barcode;
         }
+        if(document.getElementById('minStockQuantity').value === '') {
+            document.getElementById('minStockQuantity').value = minStockQuantity;
+        }
+        if(document.getElementById('reorderLevel').value === '') {
+            document.getElementById('reorderLevel').value = reorderLevel;
+        }
 
         const formData = {
             productId,
-            productName: document.getElementById('productName').value,
-            categoryId: document.getElementById('category').value,
-            price: document.getElementById('price').value,
-            costPrice: document.getElementById('costPrice').value,
-            unitofMeasure: document.getElementById('unitofMeasure').value,
-            shelfLocation: document.getElementById('shelfLocation').value,
-            pluCode: document.getElementById('pluCode').value,
-            barcode: document.getElementById('barcode').value,
+            productName: document.getElementById('productName').value.trim(),
+            categoryId: document.getElementById('category').value.trim(),
+            price: document.getElementById('price').value.trim(),
+            costPrice: document.getElementById('costPrice').value.trim(),
+            unitOfMeasure: document.getElementById('unitOfMeasure').value.trim(),
+            shelfLocation: document.getElementById('shelfLocation').value.trim(),
+            pluCode: document.getElementById('pluCode').value.trim(),
+            barcode: document.getElementById('barcode').value.trim(),
+            minStockQuantity: document.getElementById('minStockQuantity').value.trim(),
+            reorderLevel: document.getElementById('reorderLevel').value.trim(),
         };
         console.log('Form Data:', formData);
 
 
-        fetch(`https://localhost:8080/api/products/${productId}`,{
-            method: 'PUT',
-                headers: {'Content-Type': 'application/json'
+    fetch(`http://localhost:8080/api/products/${productId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify(formData)
+    })
+        .then(response => {
+            if (response.status === 204) {
+                alert('Product updated successfully');
+                loadProducts(url);
+            } else {
+                return response.json().then(data => {
+                    throw new Error(data.message || 'Failed to update product');
+                });
+            }
         })
-            .then(response => response.json())
-            .then(data => {})
-
+        .catch((error) => {
+            console.error('Error:', error);
+            alert('An error occurred while updating the product');
+        });
+        
         popup.style.display = 'none';
-        formContainer.innerHTML = ''; // Clear the form content
+        formContainer.innerHTML = '';
     };
 }
-
 
 function closeForm(){
     document.getElementById("form-popup").style.display = "none";
 }
 
+function confirmDelete(productId, productName) {
+    const deleteContainer = document.getElementById('deleteContainer');
+    const deletePopup = document.getElementById('deleteConfirm');
+
+    deletePopup.style.display = "flex";
+
+    deleteContainer.innerHTML = '';
+
+    // Create confirmation message
+    const message = document.createElement('p');
+    message.textContent = `Are you sure you want to delete "${productName}"?`;
+    deleteContainer.appendChild(message);
+
+    // Create cancel button
+    const cancelButton = document.createElement('button');
+    cancelButton.textContent = 'Cancel';
+    cancelButton.onclick = function () {
+        deletePopup.style.display = 'none';
+    };
+    deleteContainer.appendChild(cancelButton);
+
+    // Create confirm button
+    const confirmButton = document.createElement('button');
+    confirmButton.textContent = 'Confirm';
+    confirmButton.onclick = function () {
+        deleteProduct(productId);
+        deletePopup.style.display = 'none';
+    };
+    deleteContainer.appendChild(confirmButton);
+}
+
+function deleteProduct(productId) {
+    fetch(`http://localhost:8080/api/products/${productId}`, {
+        method: 'DELETE'
+    })
+        .then(response => {
+            if (response.status === 204) {
+                alert('Product deleted successfully');
+                loadProducts(url);  // Reload the product list
+            } else {
+                return response.json().then(data => {
+                    throw new Error(data.message || 'Failed to delete product');
+                });
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            alert('An error occurred while deleting the product');
+        });
+}
+
+function productCreateForm() {
+    const formContainer = document.getElementById('formContainer');
+    const popup = document.getElementById('myForm');
+
+    popup.style.display = "flex";
+
+    formContainer.innerHTML = '';
+
+    const form = document.createElement('form');
+
+    const fields = [
+        { id: 'productName', label: 'Product Name', type: 'text', placeholder: 'Enter product name' },
+        { id: 'category', label: 'Category Name', type: 'select', placeholder: 'Select category' },
+        { id: 'price', label: 'Price', type: 'text', placeholder: 'Enter price' },
+        { id: 'costPrice', label: 'Cost', type: 'text', placeholder: 'Enter cost price' },
+        { id: 'unitOfMeasure', label: 'Unit of Measure', type: 'text', placeholder: 'Enter unit of measure' },
+        { id: 'minStockQuantity', label: 'Min Stick Quantity' , type: 'text', placeholder: 'Enter quantity' },
+        { id: 'reorderLevel', label: 'Reorder level', type: 'text', placeholder: 'Enter reorder level' },
+        { id: 'shelfLocation', label: 'Shelf Location', type: 'text', placeholder: 'Enter shelf location' },
+        { id: 'pluCode', label: 'Plu Code', type: 'text', placeholder: 'Enter PLU code' },
+        { id: 'barcode', label: 'Barcode', type: 'text', placeholder: 'Enter barcode' },
+    ];
+
+    fields.forEach(field => {
+        const label = document.createElement('label');
+        label.setAttribute('for', field.id);
+        label.textContent = field.label;
+        formContainer.appendChild(label);
+
+        if (field.type === 'select') {
+            const select = document.createElement('select');
+            select.id = field.id;
+            formContainer.appendChild(select);
+
+            fetchCategoriesForm('http://localhost:8080/api/category');
+        } else {
+            const input = document.createElement('input');
+            input.type = field.type;
+            input.placeholder = field.placeholder;
+            input.id = field.id;
+            formContainer.appendChild(input);
+        }
+    });
+
+    // Create close button
+    const closeButton = document.createElement('button');
+    closeButton.type = 'button';
+    closeButton.textContent = 'Close';
+    closeButton.onclick = function () {
+        popup.style.display = 'none';
+        formContainer.innerHTML = '';
+    };
+    formContainer.appendChild(closeButton);
+
+    // Create submit button for new product creation
+    const submitButton = document.createElement('button');
+    submitButton.type = 'submit';
+    submitButton.textContent = 'Save';
+    formContainer.appendChild(submitButton);
+
+
+    formContainer.onsubmit = function (event) {
+
+        event.preventDefault();
+
+        const formData = {
+            productName: document.getElementById('productName').value.trim(),
+            categoryId: document.getElementById('category').value.trim(),
+            price: document.getElementById('price').value.trim(),
+            costPrice: document.getElementById('costPrice').value.trim(),
+            unitOfMeasure: document.getElementById('unitOfMeasure').value.trim(),
+            shelfLocation: document.getElementById('shelfLocation').value.trim(),
+            pluCode: document.getElementById('pluCode').value.trim() === '' ? null : document.getElementById('pluCode').value.trim(),
+            barcode: document.getElementById('barcode').value.trim() === '' ? null : document.getElementById('barcode').value.trim(),
+            minStockQuantity: document.getElementById('minStockQuantity').value.trim(),
+            reorderLevel: document.getElementById('reorderLevel').value.trim(),
+        };
+        console.log("create new", formData);
+
+
+        fetch('http://localhost:8080/api/products', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+            .then(response => {
+                if(response.status === 204){
+                    alert('Product created successfully');
+                    loadProducts(url);
+                } else{
+                    return response.json().then(data => {
+                        throw new Error(data.message || 'Failed to create product');
+                    })
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('An error occurred while creating the product');
+            });
+
+        popup.style.display = 'none';
+        formContainer.innerHTML = '';
+    };
+}
 
 // Load the data when the page loads
 window.onload = () => {
     const initialEndpoint = `${baseURL}?page=0&size=${pageSize}&sortBy=${sortBy}&direction=${direction}`;
+    url = initialEndpoint
     loadProducts(initialEndpoint);
     const categoryEndpoint = 'http://localhost:8080/api/category';
     fetchCategories(categoryEndpoint)

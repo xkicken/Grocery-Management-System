@@ -22,19 +22,30 @@ th {
     background-color: #f2f2f2;
 }
 
-.productEditButton {
-    background-color: #0bb83f;
+.productEdit {
+    list-style-type: none;
+    padding: 0;
+    float: left;
+    display: flex;
+    margin: 0;
+}
+
+.productButton {
     height: 28px;
     width: 28px;
     border-radius: 5px;
     display:inline-block
 }
 
-.productEditButton img{
+.productButton img{
     padding-top: 3px;
     padding-left: 2px;
     height: 20px;
     width: 20px;
+}
+
+.productDelete{
+    margin-left: 5px;: ;
 }
 
 /* Top Navigation Bar */
@@ -186,9 +197,10 @@ th {
     background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity */
     justify-content: center; /* Center horizontally */
     align-items: center; /* Center vertically */
+    transition: opacity 0.3s ease; /* Smooth transition for appearance */
 }
 
-#formContainer {
+#formContainer, #deleteContainer {
     background-color: #fff;
     padding: 20px;
     border-radius: 10px;
@@ -223,3 +235,95 @@ button {
 button:hover {
     background-color: #45a049;
 }
+
+/* Delete Button Styles */
+.productDelete {
+    height: 28px;
+    width: 28px;
+    border-radius: 5px;
+    display: inline-block;
+    background-color: #e74c3c; /* Red background for delete action */
+    border: none; /* No border */
+    cursor: pointer; /* Pointer cursor on hover */
+    position: relative; /* To position the image inside */
+    transition: background-color 0.3s; /* Smooth transition */
+}
+
+.productDelete:hover {
+    background-color: #c0392b; /* Darker red on hover */
+}
+
+.productDelete img {
+    padding-top: 3px;
+    padding-left: 2px;
+    height: 20px;
+    width: 20px;
+}
+
+/* Optional: Add focus style for accessibility */
+.productDelete:focus {
+    outline: 2px solid #ffcc00; /* Yellow outline on focus */
+    outline-offset: 2px; /* Offset the outline */
+}
+
+#pagination-wrapper {
+    display: flex;                /* Use flexbox for layout */
+    justify-content: center;      /* Center the pagination and dropdown container */
+    align-items: center;          /* Align them vertically in the middle */
+    gap: 10px;                    /* Space between pagination and dropdown */
+    margin-top: 20px;             /* Adjust margin for better spacing above */
+}
+
+.pagination {
+    display: flex;                /* Use flex for the pagination items */
+    list-style-type: none;        /* Remove default list styling */
+    padding: 0;                   /* Remove default padding */
+    margin: 0;                    /* Remove default margin */
+}
+
+.pagination li {
+    margin: 0 5px;                /* Margin between pagination items */
+}
+
+.pagination a {
+    text-decoration: none;         /* Remove underline from links */
+    padding: 8px 12px;            /* Padding around pagination links */
+    border: 1px solid #ddd;       /* Border styling */
+    color: #3498DB;               /* Link color */
+    cursor: pointer;              /* Pointer cursor on hover */
+    border-radius: 5px;           /* Rounded corners */
+}
+.pagination a:hover {
+    background-color: #2980B9;
+}
+
+.pagination a.active {
+    background-color: #3498DB;    /* Active background color */
+    color: white;                  /* Active text color */
+    border-color: #3498DB;         /* Active border color */
+}
+
+/* Fixed-size dropdown */
+#page-size-dropdown {
+    height: 35px;
+    padding: 2px 4px;            /* Padding for compactness */
+    border: 1px solid #ccc;      /* Border styling */
+    border-radius: 4px;          /* Rounded corners */
+    font-size: 12px;             /* Smaller font size */
+    cursor: pointer;              /* Pointer cursor */
+    width: 50px;                 /* Set a fixed width */
+    max-width: 50px;             /* Prevent it from expanding */
+    min-width: 50px;             /* Prevent it from shrinking */
+    text-align: center;          /* Center text in dropdown */
+    overflow: hidden;            /* Prevent resizing */
+    white-space: nowrap;         /* Prevent line breaks in options */
+    flex-shrink: 0;              /* Prevent shrinking in flexbox */
+    margin-bottom: 0;
+}
+
+
+
+
+
+
+

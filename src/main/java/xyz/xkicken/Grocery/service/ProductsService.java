@@ -51,4 +51,15 @@ public class ProductsService {
             throw new IllegalArgumentException("Product with ID: " + id + " does not exist");
         }
     }
+
+    public void deleteProducts(int id) {
+        if (productsRepository.existsById(id)){
+            log.info("Deleting product with ID: {}", id);
+            customProductsRepository.deleteProducts(id);
+        }
+        else{
+            log.info("Product with ID: {} does not exist", id);
+            throw new IllegalArgumentException("Product with ID: " + id + " does not exist");
+        }
+    }
 }

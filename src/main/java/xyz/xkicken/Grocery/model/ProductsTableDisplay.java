@@ -11,13 +11,12 @@ public record ProductsTableDisplay(
         String categoryName,
         double price,
         double costPrice,
-        Integer stockQuantity,
+//        Integer stockQuantity,
         String unitOfMeasure,
         Integer minStockQuantity,
         Integer reorderLevel,
         String shelfLocation,
         String pluCode,
-        String barcode,
-        String expirationDate
+        String barcode
 ) {
 }
