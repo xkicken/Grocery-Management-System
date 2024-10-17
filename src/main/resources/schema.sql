@@ -44,15 +44,16 @@ CREATE TABLE IF NOT EXISTS Products (
 --     FOREIGN KEY (category_id) REFERENCES Categories(category_id)
 --     );
 
--- -- Table for Inventory
--- CREATE TABLE IF NOT EXISTS Inventory (
---      inventory_id SERIAL PRIMARY KEY ,
---      product_id INT,
---      quantity_in INT DEFAULT 0,
---      quantity_out INT DEFAULT 0,
---      transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
---      FOREIGN KEY (product_id) REFERENCES Products(product_id)
---     );
+    -- Table for Inventory
+CREATE TABLE IF NOT EXISTS Inventory_Transactions (
+     inventory_Transaction_id SERIAL PRIMARY KEY ,
+     product_id INT,
+     quantity_difference INT DEFAULT 0,
+     prior_quantity INT,
+     current_quantity INT,
+     transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+     FOREIGN KEY (product_id) REFERENCES Products(product_id)
+    );
 --
 -- -- Table for Sales Orders
 -- CREATE TABLE IF NOT EXISTS SalesOrders (
