@@ -4,7 +4,8 @@ let currentPage = 0;
 let sortBy = 'productId';
 let direction = 'asc';
 let baseURL = 'http://localhost:8080/api/products/table/paginated';
-let url = ''
+let url = '';
+let searchBaseURL ='http://localhost:8080/api/products/table/paginated/search?page=0&size=' + pageSize +'&query=';
 
 // Function to fetch categories from the API
 async function fetchCategories(apiEndpoint) {
@@ -89,9 +90,10 @@ async function loadProducts(apiEndpoint) {
         
         // Create table headers (excluding 'categoryId')
         headers.forEach(header => {
-            if (header !== "categoryId") { // Adjust based on your requirements
+            if (header !== "categoryId") {
                 const th = document.createElement('th');
-                th.textContent = header.charAt(0).toUpperCase() + header.slice(1); // Capitalize header names
+                header = header.replace(/([A-Z])/g, ' $1').trim();
+                th.textContent = header.charAt(0).toUpperCase() + header.slice(1);
                 tableHeadRow.appendChild(th);
             }
         });
@@ -325,8 +327,6 @@ function productEditForm(productId, productName, categoryId, categoryName, price
 
     formContainer.innerHTML = '';
 
-    const form = document.createElement('form');
-
     const fields = [
         { id: 'productName', label: 'Product Name', type: 'text', placeholder: productName },
         { id: 'category', label: 'Category Name', type: 'select', placeholder: categoryName },
@@ -510,8 +510,6 @@ function productCreateForm() {
 
     formContainer.innerHTML = '';
 
-    const form = document.createElement('form');
-
     const fields = [
         { id: 'productName', label: 'Product Name', type: 'text', placeholder: 'Enter product name' },
         { id: 'category', label: 'Category Name', type: 'select', placeholder: 'Select category' },
@@ -630,10 +628,17 @@ function ChangeapiEndPoint(URL, page = 0, size = pageSize, sort = sortBy, direct
 
 function changePageSize(newSize) {
     currentPage = 0;
-    console.log(baseURL)
     console.log('Changing page size to:', newSize);
     pageSize = newSize;
     ChangeapiEndPoint(baseURL, 0, pageSize);
+}
+
+function performSearch() {
+    const searchInput = document.getElementById('searchInput');
+    const query = searchInput.value;
+    currentPage = 0;
+    loadProducts(searchBaseURL + query);
+
 }
 
 // Load the data when the page loads

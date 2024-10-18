@@ -134,17 +134,19 @@ public class ProductsController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping
+    @PostMapping()
     public ResponseEntity<Void> createProducts(
             @Valid @RequestBody Products product) {
         productsRepository.save(product);
         return ResponseEntity.noContent().build();
     }
 
-//    @PostMapping("/{id}")
-//    public ResponseEntity<Void> createProducts(
-//            @PathVariable Integer id) {
-//        productsService.createProduct(product, id);
-//    }
-
+    @GetMapping("/table/paginated/search")
+    public Page<ProductsTableDisplay> searchProducts(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "20") Integer size,
+            @RequestParam String query
+    ) {
+        return productTableDisplayService.getProductsTableViewBySearch(page, size, query);
+    }
 }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import xyz.xkicken.Grocery.Products.model.ProductsTableDisplay;
 import xyz.xkicken.Grocery.Products.repository.ProductsTableDisplayPagingRepository;
 import xyz.xkicken.Grocery.Products.repository.ProductsTableDisplayRepository;
+import xyz.xkicken.Grocery.Products.repository.CustomProductTableDisplayRepository;
 
 import java.util.List;
 
@@ -20,19 +21,21 @@ public class ProductTableDisplayService {
 
     private final ProductsTableDisplayRepository productsTableDisplayRepository;
     private final ProductsTableDisplayPagingRepository  productsTableDisplayPagingRepository;
+    private final CustomProductTableDisplayRepository customProductTableDisplayRepository;
 
     @Autowired
-    public ProductTableDisplayService(ProductsTableDisplayRepository productsTableDisplayRepository, ProductsTableDisplayPagingRepository productsTableDisplayPagingRepository) {
+    public ProductTableDisplayService(ProductsTableDisplayRepository productsTableDisplayRepository,
+                                      ProductsTableDisplayPagingRepository productsTableDisplayPagingRepository,
+                                      CustomProductTableDisplayRepository customProductTableDisplayRepository) {
         this.productsTableDisplayRepository = productsTableDisplayRepository;
         this.productsTableDisplayPagingRepository = productsTableDisplayPagingRepository;
+        this.customProductTableDisplayRepository = customProductTableDisplayRepository;
     }
 
     public List<ProductsTableDisplay> getAllProducts() {
         log.info("Fetching all products");
         return productsTableDisplayRepository.findAll();
     }
-
-
 
     public List<ProductsTableDisplay> getProductsByCategory(int id) {
         log.info("Fetching products by category: {}", id);
@@ -82,6 +85,12 @@ public class ProductTableDisplayService {
         throw new IllegalArgumentException();
     }
 
+    public Page<ProductsTableDisplay> getProductsTableViewBySearch(int page, int size, String query) {
+        log.info("Fetching products by search: {}, page: {}, size: {}", query, page, size);
+        Pageable pageable = PageRequest.of(page, size);
+        return productsTableDisplayPagingRepository.findByProductNameContainingIgnoreCase(query, pageable);
+    }
+
     public Iterable<ProductsTableDisplay> getAllSortedProducts(String sortBy, String direction) {
         log.info("Fetching all products sorted by: {}, direction: {}", sortBy, direction);
         Sort sort = direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
@@ -105,5 +114,10 @@ public class ProductTableDisplayService {
         }
 
         return true;
+    }
+
+    public List<ProductsTableDisplay> searchProduct(String column, String query){
+        log.info("Searching for products with column: {}, query: {}", column, query);
+        return customProductTableDisplayRepository.searchProductsByColumn(column, query);
     }
 }

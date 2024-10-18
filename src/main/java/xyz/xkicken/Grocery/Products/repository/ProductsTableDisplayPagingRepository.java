@@ -7,4 +7,5 @@ import xyz.xkicken.Grocery.Products.model.ProductsTableDisplay;
 
 public interface ProductsTableDisplayPagingRepository extends PagingAndSortingRepository<ProductsTableDisplay, Integer> {
     Page<ProductsTableDisplay> findByCategoryId(Integer id, Pageable pageable);
+    Page<ProductsTableDisplay> findByProductNameContainingIgnoreCase(String productName, Pageable pageable);
 }
