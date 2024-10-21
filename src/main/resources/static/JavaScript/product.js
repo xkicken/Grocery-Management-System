@@ -80,7 +80,7 @@ async function loadProducts(apiEndpoint) {
         }
 
         const createImg = document.createElement('img');
-        createImg.src = '../static/images/icons/create-svgrepo-com.svg'
+        createImg.src = '/images/icons/create-svgrepo-com.svg'
 
         createButton.appendChild(createImg);
         th.appendChild(createButton);
@@ -116,7 +116,7 @@ async function loadProducts(apiEndpoint) {
             }
             
             const imgUpdate = document.createElement('img');
-            imgUpdate.src = '../static/images/icons/edit-button-svgrepo-com.svg'
+            imgUpdate.src = '/images/icons/edit-button-svgrepo-com.svg'
             updateButton.appendChild(imgUpdate);
             buttonDiv.appendChild(updateButton);
             
@@ -130,7 +130,7 @@ async function loadProducts(apiEndpoint) {
             }
             
             const imgDelete = document.createElement('img');
-            imgDelete.src = '../static/images/icons/delete-button-svgrepo-com.svg'
+            imgDelete.src = '/images/icons/delete-button-svgrepo-com.svg'
             deleteButton.appendChild(imgDelete);
             buttonDiv.appendChild(deleteButton);
             td.appendChild(buttonDiv);
@@ -266,11 +266,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (nameasc) {
             sortByASC('productName');
-            arrowImage.src = "../static/images/icons/arrowhead-down-svgrepo-com.svg";
+            arrowImage.src = "/images/icons/arrowhead-down-svgrepo-com.svg";
             toggleTextName.textContent = "Product Name Descending";
         } else {
             sortByDESC('productName');
-            arrowImage.src = "../static/images/icons/arrowhead-up-svgrepo-com.svg";
+            arrowImage.src = "/images/icons/arrowhead-up-svgrepo-com.svg";
             toggleTextName.textContent = "Product Name Ascending";
         }
 
@@ -290,11 +290,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (priceasc) {
             sortByASC('price');
-            arrowImage.src = "../static/images/icons/arrowhead-down-svgrepo-com.svg";
+            arrowImage.src = "/images/icons/arrowhead-down-svgrepo-com.svg";
             toggleTextPrice.textContent = "Product Price Descending";
         } else {
             sortByDESC('price');
-            arrowImage.src = "../static/images/icons/arrowhead-up-svgrepo-com.svg";
+            arrowImage.src = "/images/icons/arrowhead-up-svgrepo-com.svg";
             toggleTextPrice.textContent = "Product Price Ascending";
         }
 
