@@ -7,6 +7,15 @@ let baseURL = 'http://localhost:8080/api/products/table/paginated';
 let url = '';
 let searchBaseURL ='http://localhost:8080/api/products/table/paginated/search?page=0&size=' + pageSize +'&query=';
 
+function ChangeToInventory(){
+    baseURL = 'http://localhost:8080/api/inventory/table/paginated';
+    pageSize = 100;
+    searchBaseURL = 'http://localhost:8080/api/inventory/table/paginated/search?page=0&size=' + pageSize +'&query=';
+    sortBy = 'inventoryTransactionId';
+    startup()
+}
+
+
 // Function to fetch categories from the API
 async function fetchCategories(apiEndpoint) {
     try {
@@ -47,7 +56,7 @@ async function loadProducts(apiEndpoint) {
         }
         const data = await response.json();
         console.log('Fetched data:', data);
-        generatePageNumbers(data.totalPages)
+        generatePageNumbers(data.page.totalPages)
 
         // Access the 'content' array from the paginated response
         const products = data.content;
@@ -212,6 +221,8 @@ function generatePageNumbers(pageCount) {
     const paginationList = document.createElement('ul');
     paginationList.className = 'pagination';
     paginationContainer.innerHTML = '';
+
+    console.log(pageCount);
 
     for (let i = 0; i < pageCount; i++) {
         const li = document.createElement('li');
@@ -638,14 +649,14 @@ function performSearch() {
     const query = searchInput.value;
     currentPage = 0;
     loadProducts(searchBaseURL + query);
-
 }
 
-// Load the data when the page loads
-window.onload = () => {
+function startup(){
     const initialEndpoint = `${baseURL}?page=0&size=${pageSize}&sortBy=${sortBy}&direction=${direction}`;
     url = initialEndpoint
     loadProducts(initialEndpoint);
     const categoryEndpoint = 'http://localhost:8080/api/category';
     fetchCategories(categoryEndpoint)
-};
+}
+
+window.onload = startup;

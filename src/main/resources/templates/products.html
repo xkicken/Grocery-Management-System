@@ -8,91 +8,102 @@
 </head>
 <body>
 
-<h1>Product List</h1>
 
-<div class="topnav">
-    <!-- Sort Dropdown -->
-    <div class="dropdown" role="menu">
-        <button onclick="toggleDropdown('myDropdown')" class="dropbtn" role="button">
-            <div class="dropbtn-content">
-                <img src="../static/images/icons/SortIcon.png" alt="Sort Icon">
-                <span>Sort</span>
+
+
+<div class="left-nav">
+    <a href="#product" >Product</a>
+    <a href="#inventory"  onclick="ChangeToInventory()">Inventory</a>
+</div>
+<div class="content">
+
+    <h1 id="productHeader">Product List<br><br></h1>
+    <h1 id="inventoryHeader">Inventory List<br><br></h1>
+
+    <div class="topnav">
+        <!-- Sort Dropdown -->
+        <div class="dropdown" role="menu">
+            <button onclick="toggleDropdown('myDropdown')" class="dropbtn" role="button">
+                <div class="dropbtn-content">
+                    <img src="../static/images/icons/SortIcon.png" alt="Sort Icon">
+                    <span>Sort</span>
+                </div>
+            </button>
+            <div id="myDropdown" class="dropdown-content" role="menu">
+                <a href="#" id="toggleLinkName" role="menuitem">
+                    <div class="toggle-content">
+                        <span id="toggleTextName">Product Name Ascending</span>
+                        <img src="../static/images/icons/arrowhead-up-svgrepo-com.svg" alt="Sort Arrow" class="arrow-icon" />
+                    </div>
+                </a>
+                <a href="#" id="toggleLinkPrice" role="menuitem">
+                    <div class="toggle-content">
+                        <span id="toggleTextPrice">Product Price Ascending</span>
+                        <img src="../static/images/icons/arrowhead-up-svgrepo-com.svg" alt="Sort Arrow" class="arrow-icon" />
+                    </div>
+                </a>
             </div>
-        </button>
-        <div id="myDropdown" class="dropdown-content" role="menu">
-            <a href="#" id="toggleLinkName" role="menuitem">
-                <div class="toggle-content">
-                    <span id="toggleTextName">Product Name Ascending</span>
-                    <img src="../static/images/icons/arrowhead-up-svgrepo-com.svg" alt="Sort Arrow" class="arrow-icon" />
-                </div>
-            </a>
-            <a href="#" id="toggleLinkPrice" role="menuitem">
-                <div class="toggle-content">
-                    <span id="toggleTextPrice">Product Price Ascending</span>
-                    <img src="../static/images/icons/arrowhead-up-svgrepo-com.svg" alt="Sort Arrow" class="arrow-icon" />
-                </div>
-            </a>
         </div>
+
+        <!-- Filter Dropdown -->
+        <div class="dropdown">
+            <button onclick="toggleDropdown('myDropdownFilterCategories')" class="dropbtn">
+                <div class="dropbtn-content">
+                    <img src="../static/images/icons/FilterIcon.png" alt="Filter Icon">
+                    <span>Filter By <br> Categories</span>
+                </div>
+            </button>
+            <div id="myDropdownFilterCategories" class="dropdown-content">
+            </div>
+        </div>
+
+    <!--    <div class="dropdown">-->
+    <!--        <button onclick="toggleDropdown('myDropdownFilter')" class="dropbtn">-->
+    <!--            <div class="dropbtn-content">-->
+    <!--                <img src="../static/images/icons/FilterIcon.png" alt="Filter Icon">-->
+    <!--                <span style="font-size: 15px">Filter By Shelf Location</span>-->
+    <!--            </div>-->
+    <!--        </button>-->
+    <!--        <div id="myDropdownFilter" class="dropdown-content">-->
+    <!--        </div>-->
+    <!--    </div>-->
     </div>
 
-    <!-- Filter Dropdown -->
-    <div class="dropdown">
-        <button onclick="toggleDropdown('myDropdownFilterCategories')" class="dropbtn">
-            <div class="dropbtn-content">
-                <img src="../static/images/icons/FilterIcon.png" alt="Filter Icon">
-                <span>Filter By <br> Categories</span>
-            </div>
-        </button>
-        <div id="myDropdownFilterCategories" class="dropdown-content">
-        </div>
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search Product Names..." required>
+        <button id="searchButton" onclick="performSearch()">Search</button>
     </div>
 
-<!--    <div class="dropdown">-->
-<!--        <button onclick="toggleDropdown('myDropdownFilter')" class="dropbtn">-->
-<!--            <div class="dropbtn-content">-->
-<!--                <img src="../static/images/icons/FilterIcon.png" alt="Filter Icon">-->
-<!--                <span style="font-size: 15px">Filter By Shelf Location</span>-->
-<!--            </div>-->
-<!--        </button>-->
-<!--        <div id="myDropdownFilter" class="dropdown-content">-->
-<!--        </div>-->
-<!--    </div>-->
-</div>
+    <div class="form-popup" id="myForm">
+    <form id="formContainer">
 
-<div class="search-container">
-    <input type="text" id="searchInput" placeholder="Search Product Names..." required>
-    <button id="searchButton" onclick="performSearch()">Search</button>
-</div>
+    </form>
+    </div>
 
-<div class="form-popup" id="myForm">
-<form id="formContainer">
+    <div class="form-popup" id="deleteConfirm" style="display: none;">
+        <form id="deleteContainer"></form>
+    </div>
 
-</form>
-</div>
+    <table id="dynamicTable">
+        <thead>
+        <tr id="tableHeadRow">
+        </tr>
+        </thead>
+        <tbody id="tableBody">
+        </tbody>
+    </table>
 
-<div class="form-popup" id="deleteConfirm" style="display: none;">
-    <form id="deleteContainer"></form>
-</div>
+    <div id="pagination-wrapper">
 
-<table id="dynamicTable">
-    <thead>
-    <tr id="tableHeadRow">
-    </tr>
-    </thead>
-    <tbody id="tableBody">
-    </tbody>
-</table>
+        <div id="pagination-container"></div>
 
-<div id="pagination-wrapper">
-
-    <div id="pagination-container"></div>
-
-    <select id="page-size-dropdown" name="page" class="page-size-select" onchange="changePageSize(this.value)">
-        <option value="20">20</option>
-        <option value="100">100</option>
-        <option value="50">50</option>
-        <option value="10">10</option>
-    </select>
+        <select id="page-size-dropdown" name="page" class="page-size-select" onchange="changePageSize(this.value)">
+            <option value="20">20</option>
+            <option value="100">100</option>
+            <option value="50">50</option>
+            <option value="10">10</option>
+        </select>
+    </div>
 </div>
 <script src="../static/JavaScript/product.js"></script>
 </body>

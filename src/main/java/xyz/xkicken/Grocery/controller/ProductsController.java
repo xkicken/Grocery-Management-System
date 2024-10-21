@@ -93,7 +93,6 @@ public class ProductsController {
             @RequestParam(defaultValue = "productName") String sortBy,
             @RequestParam(defaultValue = "asc") String direction
     ) {
-        boolean ascending = direction.equalsIgnoreCase("asc");
         return productTableDisplayService.getProductsTableView(page, size, sortBy, direction);
     }
 
@@ -106,7 +105,6 @@ public class ProductsController {
             @RequestParam(defaultValue = "asc") String direction
     ) {
 
-        boolean ascending = direction.equalsIgnoreCase("asc");
         return productTableDisplayService.getProductsTableViewByCategory(id, page, size, sortBy, direction);
     }
 
